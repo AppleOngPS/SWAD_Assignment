@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = SWAD
-build_property.ProjectDir = C:\Users\ongap\OneDrive\Desktop\NP\SWAD\Code1\SWAD\SWAD\
+build_property.ProjectDir = C:\NP\SWAD\C#\SWAD\SWAD\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
