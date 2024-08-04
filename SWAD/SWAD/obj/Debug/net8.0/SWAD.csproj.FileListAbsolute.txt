@@ -1,0 +1,15 @@
+C:\Users\ongap\OneDrive\Desktop\NP\SWAD\Code1\SWAD\SWAD\bin\Debug\net8.0\SWAD.exe
+C:\Users\ongap\OneDrive\Desktop\NP\SWAD\Code1\SWAD\SWAD\bin\Debug\net8.0\SWAD.deps.json
+C:\Users\ongap\OneDrive\Desktop\NP\SWAD\Code1\SWAD\SWAD\bin\Debug\net8.0\SWAD.runtimeconfig.json
+C:\Users\ongap\OneDrive\Desktop\NP\SWAD\Code1\SWAD\SWAD\bin\Debug\net8.0\SWAD.dll
+C:\Users\ongap\OneDrive\Desktop\NP\SWAD\Code1\SWAD\SWAD\bin\Debug\net8.0\SWAD.pdb
+C:\Users\ongap\OneDrive\Desktop\NP\SWAD\Code1\SWAD\SWAD\obj\Debug\net8.0\SWAD.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ongap\OneDrive\Desktop\NP\SWAD\Code1\SWAD\SWAD\obj\Debug\net8.0\SWAD.AssemblyInfoInputs.cache
+C:\Users\ongap\OneDrive\Desktop\NP\SWAD\Code1\SWAD\SWAD\obj\Debug\net8.0\SWAD.AssemblyInfo.cs
+C:\Users\ongap\OneDrive\Desktop\NP\SWAD\Code1\SWAD\SWAD\obj\Debug\net8.0\SWAD.csproj.CoreCompileInputs.cache
+C:\Users\ongap\OneDrive\Desktop\NP\SWAD\Code1\SWAD\SWAD\obj\Debug\net8.0\SWAD.sourcelink.json
+C:\Users\ongap\OneDrive\Desktop\NP\SWAD\Code1\SWAD\SWAD\obj\Debug\net8.0\SWAD.dll
+C:\Users\ongap\OneDrive\Desktop\NP\SWAD\Code1\SWAD\SWAD\obj\Debug\net8.0\refint\SWAD.dll
+C:\Users\ongap\OneDrive\Desktop\NP\SWAD\Code1\SWAD\SWAD\obj\Debug\net8.0\SWAD.pdb
+C:\Users\ongap\OneDrive\Desktop\NP\SWAD\Code1\SWAD\SWAD\obj\Debug\net8.0\SWAD.genruntimeconfig.cache
+C:\Users\ongap\OneDrive\Desktop\NP\SWAD\Code1\SWAD\SWAD\obj\Debug\net8.0\ref\SWAD.dll

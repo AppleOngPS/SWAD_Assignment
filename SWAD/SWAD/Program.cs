@@ -29,15 +29,13 @@ while (true)
     else if (option == 0)
     {
 
-    Console.WriteLine("Bye");
+        Console.WriteLine("Bye");
         break;
     }
 
-    else 
+    else
     {
         Console.WriteLine("You have enter invalid option!");
-        
+
     }
 }
-
-
