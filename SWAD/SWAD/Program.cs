@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 void DisplayMenu()
 {
+    Console.WriteLine("Enter Your Option: ");
     Console.WriteLine("[1] Reserve Car");
     Console.WriteLine("[2] option 2");
     Console.WriteLine("[3] option 3");
