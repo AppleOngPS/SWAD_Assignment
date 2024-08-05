@@ -21,8 +21,10 @@ namespace SWAD
             get { return earning; }
             set { earning = value; }
         }
-        
 
+        public List<Vehicle> Vehiclelist { get; set; } = new List<Vehicle>();
+        public List<Booking> Bookinglist { get; set; }= new List<Booking>();
+        public CarOwner() { }
         public CarOwner(string r, double e)
         {
             registerCar = r;

@@ -34,6 +34,12 @@ while (true)
     else if (option == 2)
     {
         Console.WriteLine();
+
+        
+
+
+
+
     }
     else if (option == 3)
     {

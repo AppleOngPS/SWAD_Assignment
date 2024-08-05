@@ -65,6 +65,24 @@ namespace SWAD
             get { return type; }
             set { type = value; }
         }
-
+        private Booking booking;
+        public Booking Booking
+        {
+            get { return booking; }
+            set
+            {
+                if (booking != value)
+                {
+                    booking = value;
+                    value.Vehicle = this;
+                }
+            }
+        }
+        private CarOwner carOwner;
+        public CarOwner CarOwner
+        {
+            get { return carOwner; }
+            set { carOwner = value; }
+        }
     }
 }
