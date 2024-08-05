@@ -40,7 +40,21 @@ namespace SWAD
             set { endDate = value; }
         }
 
-        public Booking() { }
+        private CarOwner carOwner;
+
+
+        public class Husband
+        {
+          
+            public Wife MyWife
+            {
+                set
+                {
+                    myWife = value;
+                    value.MyHusband = this;
+                }
+            }
+        }
 
         public Booking(int i , DateOnly sd , TimeOnly st, DateOnly ed, TimeOnly et)
         {
