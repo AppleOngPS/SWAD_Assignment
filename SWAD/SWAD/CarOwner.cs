@@ -8,5 +8,33 @@ namespace SWAD
 {
     internal class CarOwner
     {
+        private string registerCar;
+        public string RegisterCar
+        {
+            get { return registerCar; }
+            set { registerCar = value; }
+        }
+
+        private double earning;
+        public double Earning
+        {
+            get { return earning; }
+            set { earning = value; }
+        }
+        
+
+        public CarOwner(string r, double e)
+        {
+            registerCar = r;
+            earning = e;
+
+        }
+
+
+        public override string ToString()
+        {
+            return $"registerCar: {registerCar}\nearning: {earning}";
+        }
     }
 }
+

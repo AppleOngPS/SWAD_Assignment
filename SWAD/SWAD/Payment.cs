@@ -16,8 +16,8 @@ namespace SWAD
                 set { id = value; }
             }
 
-            private string amount;
-            public string Amount
+            private double amount;
+            public double Amount
             {
                 get { return amount; }
                 set { amount = value; }
@@ -38,7 +38,7 @@ namespace SWAD
 
 
 
-            public Payment(int i, string a, string t, string s)
+            public Payment(int i, double a, string t, string s)
             {
                 id = i;
                 amount = a;

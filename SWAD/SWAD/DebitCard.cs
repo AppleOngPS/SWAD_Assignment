@@ -15,8 +15,8 @@ namespace SWAD
             set { name = value; }
         }
 
-        private int balance;
-        public int Balance
+        private double balance;
+        public double Balance
         {
             get { return balance; }
             set { balance = value; }
@@ -37,7 +37,7 @@ namespace SWAD
 
 
 
-        public DebitCard(string n, int b, int c, DateOnly e, int i, string a, string t, string s) : base(i, a, t, s)
+        public DebitCard(string n, double b, int c, DateOnly e, int i, double a, string t, string s) : base(i, a, t, s)
         {
             name = n;
             balance = b;
