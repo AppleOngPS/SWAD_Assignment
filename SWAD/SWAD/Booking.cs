@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SWAD
 {
-    public class Booking
+    internal class Booking
     {
         private int id;
         public int Id
@@ -40,21 +40,12 @@ namespace SWAD
             set { endDate = value; }
         }
 
-        private CarOwner carOwner;
+
+       // private CarOwner carOwner;
+        
 
 
-        public class Husband
-        {
-          
-            public Wife MyWife
-            {
-                set
-                {
-                    myWife = value;
-                    value.MyHusband = this;
-                }
-            }
-        }
+
 
         public Booking(int i , DateOnly sd , TimeOnly st, DateOnly ed, TimeOnly et)
         {

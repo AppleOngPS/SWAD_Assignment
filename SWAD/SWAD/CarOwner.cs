@@ -6,7 +6,16 @@ using System.Threading.Tasks;
 
 namespace SWAD
 {
-    internal class CarOwner
+    internal class CarOwner : Account
     {
+
+        
+
+        private List<Booking> booking;
+        
+      
+
     }
+
 }
+
