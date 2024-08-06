@@ -84,5 +84,9 @@ namespace SWAD
             get { return carOwner; }
             set { carOwner = value; }
         }
+        public override string ToString()
+        {
+            return $" ID: {Id}, Brand: {Brand},Model: {Model}, Type: {Type}, Mileage: {Mileage}, Price: {Price}, Available: {Availability}";
+        }
     }
 }
