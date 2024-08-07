@@ -14,5 +14,15 @@ namespace SWAD
 
         public DateTime DateofBirth { get; set; }
 
+        public Account() { }
+
+        public Account(int id,string name ,int contactNumber,DateTime dateofBirth)
+        {
+            Id = id;
+            Name = name;
+            ContactNumber = contactNumber;
+            DateofBirth = dateofBirth;
+        }
+
     }
 }

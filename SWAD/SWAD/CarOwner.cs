@@ -8,12 +8,6 @@ namespace SWAD
 {
     internal class CarOwner : Account
     {
-        private string registerCar;
-        public string RegisterCar
-        {
-            get { return registerCar; }
-            set { registerCar = value; }
-        }
 
         private double earning;
         public double Earning
@@ -25,9 +19,9 @@ namespace SWAD
         public List<Vehicle> Vehiclelist { get; set; } = new List<Vehicle>();
         public List<Booking> Bookinglist { get; set; }= new List<Booking>();
         public CarOwner() { }
-        public CarOwner(string r, double e)
+        public CarOwner(int id, string n, int c, DateTime dob,double e=0):base(id,n,c,dob)
         {
-            registerCar = r;
+            
             earning = e;
 
         }
@@ -35,7 +29,7 @@ namespace SWAD
 
         public override string ToString()
         {
-            return $"registerCar: {registerCar}\nearning: {earning}";
+            return $"earning: {earning}";
         }
     }
 

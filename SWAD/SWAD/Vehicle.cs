@@ -40,8 +40,8 @@ namespace SWAD
             set { photo = value; }
         }
 
-        private int price;
-        public int Price
+        private double price;
+        public double Price
         {
             get { return price; }
             set { price = value; }

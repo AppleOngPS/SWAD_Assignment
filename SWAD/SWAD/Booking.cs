@@ -15,30 +15,31 @@ namespace SWAD
             set { id = value; }
         }
 
-        private TimeOnly startTime;
-        public TimeOnly StartTime
+        private DateTime startTime;
+        public DateTime StartTime
         {
             get { return startTime; }
             set { startTime = value; }
         }
-        private TimeOnly endTime;
-        public TimeOnly EndTime
+        private DateTime endTime;
+        public DateTime EndTime
         {
             get { return endTime; }
             set { endTime = value; }
         }
-        private DateOnly startDate;
-        public DateOnly StartDate
+        private DateTime startDate;
+        public DateTime StartDate
         {
             get { return startDate; }
             set { startDate = value; }
         }
-        private DateOnly endDate;
-        public DateOnly EndDate
+        private DateTime endDate;
+        public DateTime EndDate
         {
             get { return endDate; }
             set { endDate = value; }
         }
+        
         private CarOwner carOwner;
         public CarOwner CarOwner
         {
@@ -49,6 +50,7 @@ namespace SWAD
         private Vehicle vehicle;
         public Vehicle Vehicle
         {
+            get { return vehicle; }
             set
             {
                 if (vehicle != value)
@@ -90,7 +92,7 @@ namespace SWAD
 
 
         public Booking() { }
-        public Booking(int i , DateOnly sd , TimeOnly st, DateOnly ed, TimeOnly et)
+        public Booking(int i , DateTime sd , DateTime st, DateTime ed, DateTime et)
         {
             id = i;
             startDate = sd;
@@ -99,6 +101,29 @@ namespace SWAD
             endTime = st;
         }
 
+        public void setDate(int id,int x,DateTime startdate, DateTime enddate)
+        {
+            if (id == carOwner.Id)
+            {
+                carOwner.Bookinglist[x].startDate = startdate;
+                carOwner.Bookinglist[x].endDate = enddate;
+            }
+        }
+        public void setTime(int id,int x,DateTime starttime, DateTime endtime)
+        {
+            if (id == carOwner.Id)
+            {
+                carOwner.Bookinglist[x].startTime = starttime;
+                carOwner.Bookinglist[x].endTime = endtime;
+            }
+        }
+        public void setRentalfee(int id,int x,double fee)
+        {
+            if (id == carOwner.Id)
+            {
+                carOwner.Vehiclelist[x].Price = fee;
+            }
+        }
 
         public override string ToString()
         {
