@@ -11,7 +11,7 @@ void DisplayMenu()
     Console.WriteLine("Enter Your option: ");
 }
 List<Booking> sList = new List<Booking>();
-List<Vehicle> vehicleList = InitVehicleList();
+List<Vehicle> vehicleList = listOfAvailableVehicle();
 int option;
 while (true)
 {
@@ -19,9 +19,8 @@ while (true)
     option = Convert.ToInt32(Console.ReadLine());
     if (option == 1)
     {
-        InitTimeList(sList);
-
-        DisplayAvailableVehicles(vehicleList);
+        displayAvailableDateTime(sList);
+        displayListAvailableVehicles(vehicleList);
         Console.Write("Choose an available Vehicle by ID: ");
         if (!int.TryParse(Console.ReadLine(), out int selectedVehicleId))
         {
@@ -34,7 +33,6 @@ while (true)
         if (selectedVehicle != null)
         {
             Console.WriteLine($"You selected: {selectedVehicle.Make} {selectedVehicle.Model}");
-
             DisplayAvailableBookings(sList);
             Console.Write("Choose an available booking by ID: ");
             if (!int.TryParse(Console.ReadLine(), out int selectedBookingId))
@@ -50,98 +48,7 @@ while (true)
                 Console.WriteLine($"You selected: Booking ID: {selectedBooking.Id}, Start Date: {selectedBooking.StartDate}, Start Time: {selectedBooking.StartTime}, End Date: {selectedBooking.EndDate}, End Time: {selectedBooking.EndTime}");
                 selectedVehicle.Booking = selectedBooking;
 
-                // Handle pickup or delivery choice for pickup
-                Console.WriteLine("Choose pickup or delivery option for pickup:");
-                Console.WriteLine("[1] Pickup");
-                Console.WriteLine("[2] Delivery");
-                Console.Write("Enter Your option: ");
-                if (!int.TryParse(Console.ReadLine(), out int pickupOption))
-                {
-                    Console.WriteLine("Invalid input. Please enter a number.");
-                    continue;
-                }
-
-                if (pickupOption == 1)
-                {
-                    Console.WriteLine("Pickup selected.");
-                    DisplayBranches(InitIcarStationList()); // Show available branches
-                    Console.Write("Choose a branch by ID: ");
-                    if (!int.TryParse(Console.ReadLine(), out int selectedBranchId))
-                    {
-                        Console.WriteLine("Invalid input. Please enter a number.");
-                        continue;
-                    }
-
-                    IcarStation selectedBranch = InitIcarStationList().Find(b => b.Id == selectedBranchId);
-
-                    if (selectedBranch != null)
-                    {
-                        Console.WriteLine($"Pickup branch selected: {selectedBranch.Id}, Address: {selectedBranch.Location}");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid branch ID selected.");
-                        continue;
-                    }
-                }
-                else if (pickupOption == 2)
-                {
-                    Console.WriteLine("Delivery selected.");
-                    HandleDelivery(); // Handle delivery details
-                }
-                else
-                {
-                    Console.WriteLine("Invalid option selected for pickup. Please choose either pickup or delivery.");
-                    continue;
-                }
-
-                // Handle return location or delivery
-                Console.WriteLine("Choose return option:");
-                Console.WriteLine("[1] Return Pickup");
-                Console.WriteLine("[2] Return Delivery");
-                Console.Write("Enter Your option: ");
-                if (!int.TryParse(Console.ReadLine(), out int returnOption))
-                {
-                    Console.WriteLine("Invalid input. Please enter a number.");
-                    continue;
-                }
-
-                if (returnOption == 1)
-                {
-                    Console.WriteLine("Return Pickup selected.");
-                    DisplayBranches(InitIcarStationList()); // Show available branches for return
-                    Console.Write("Choose a branch by ID for return: ");
-                    if (!int.TryParse(Console.ReadLine(), out int selectedReturnBranchId))
-                    {
-                        Console.WriteLine("Invalid input. Please enter a number.");
-                        continue;
-                    }
-
-                    IcarStation selectedReturnBranch = InitIcarStationList().Find(b => b.Id == selectedReturnBranchId);
-                    bool isBranchValid = false;
-
-                    while (!isBranchValid)
-                    {
-                        Console.Write("Choose a branch by ID: ");
-                        if (!int.TryParse(Console.ReadLine(), out int selectedBranchId))
-                        {
-                            Console.WriteLine("Invalid input. Please enter a number.");
-                            continue; // Re-prompt if the input is not a number
-                        }
-                    }
-                }
-                else if (returnOption == 2)
-                {
-                    Console.WriteLine("Return Delivery selected.");
-                    HandleDelivery(); // Handle return delivery details
-                }
-                else
-                {
-                    Console.WriteLine("Invalid option selected for return. Please choose either pickup or delivery.");
-                    continue;
-                }
-
-                Console.WriteLine("Booking confirmed with the selected options!");
+                HandlePickupAndReturn();
             }
             else
             {
@@ -153,10 +60,11 @@ while (true)
             Console.WriteLine("Invalid vehicle ID selected.");
         }
     }
+ 
+  
 
 
-
-    else if (option == 2)
+        else if (option == 2)
     {
         Console.WriteLine();
 
@@ -166,11 +74,11 @@ while (true)
 
 
     }
-    else if (option == 3)
+        else if (option == 3)
     {
         Console.WriteLine();
     }
-    else if (option == 0)
+         else if (option == 0)
     {
 
         Console.WriteLine("Bye");
@@ -184,7 +92,7 @@ while (true)
     }
 }
 
-static List<Vehicle> InitVehicleList()
+static List<Vehicle> listOfAvailableVehicle()
 {
     return new List<Vehicle>
         {
@@ -195,7 +103,7 @@ static List<Vehicle> InitVehicleList()
             new Vehicle { Id = 5, Make = "Nissan", Model = "Altima", Mileage = 22000, Photo = "url5", Price = 23000, Availability = true, Brand = "Nissan", Type = "Sedan" }
         };
 }
-static List<IcarStation> InitIcarStationList()
+static List<IcarStation> listOfIcarStation()
 {
     return new List<IcarStation>
     {
@@ -204,7 +112,7 @@ static List<IcarStation> InitIcarStationList()
         new IcarStation { Id = 3, Location = "Tampines Branch" }
     };
 }
-static void DisplayBranches(List<IcarStation> branches)
+static void displayListOfIcarStation(List<IcarStation> branches)
 {
     Console.WriteLine("Available Branches:");
     foreach (var branch in branches)
@@ -212,7 +120,7 @@ static void DisplayBranches(List<IcarStation> branches)
         Console.WriteLine($"ID: {branch.Id}, Name: {branch.Location}");
     }
 }
-static void DisplayAvailableVehicles(List<Vehicle> vehicles)
+static void displayListAvailableVehicles(List<Vehicle> vehicles)
 {
     Console.WriteLine("Available Vehicles:");
     foreach (var vehicle in vehicles)
@@ -221,7 +129,7 @@ static void DisplayAvailableVehicles(List<Vehicle> vehicles)
     }
 }
 
-static void InitTimeList(List<Booking> sList)
+static void displayAvailableDateTime(List<Booking> sList)
 {
     DateOnly date1 = new DateOnly(2024, 8, 15);
     TimeOnly startTime1 = new TimeOnly(10, 0);
@@ -261,6 +169,7 @@ static void InitTimeList(List<Booking> sList)
     sList.Add(time5);
 }
 
+//wait
 static void DisplayAvailableBookings(List<Booking> sList)
 {
     Console.WriteLine("Available Bookings:");
@@ -271,30 +180,128 @@ static void DisplayAvailableBookings(List<Booking> sList)
     }
 }
 
-static void HandleDelivery()
-{
-    bool isAddressValid = false;
 
-    while (!isAddressValid)
+
+//select delivery
+static void HandlePickupAndReturn()
+{
+    while (true)
+    {
+        Console.WriteLine("Choose pickup or delivery option for pickup:");
+        Console.WriteLine("[1] Pickup");
+        Console.WriteLine("[2] Delivery");
+        Console.Write("Enter Your option: ");
+        if (!int.TryParse(Console.ReadLine(), out int pickupOption))
+        {
+            Console.WriteLine("Invalid input. Please enter a number.");
+            continue;
+        }
+
+        if (pickupOption == 1)
+        {
+            Console.WriteLine("Pickup selected.");
+            displayListOfIcarStation(listOfIcarStation());
+            Console.Write("Choose a branch by ID: ");
+            if (!int.TryParse(Console.ReadLine(), out int validIcarStationId))
+            {
+                Console.WriteLine("Invalid input. Please enter a number.");
+                continue;
+            }
+
+            IcarStation validIcarStation = listOfIcarStation().Find(b => b.Id == validIcarStationId);
+
+            if (validIcarStation != null)
+            {
+                Console.WriteLine($"Pickup branch selected: {validIcarStation.Id}, Address: {validIcarStation.Location}");
+                break;
+            }
+            else
+            {
+                Console.WriteLine("Invalid branch ID selected.");
+                continue;
+            }
+        }
+        else if (pickupOption == 2)
+        {
+            Console.WriteLine("Delivery selected.");
+            selectDelivery();
+            break;
+        }
+        else
+        {
+            Console.WriteLine("Invalid option selected for pickup. Please choose either pickup or delivery.");
+            continue;
+        }
+    }
+
+    while (true)
+    {
+        Console.WriteLine("Choose return option:");
+        Console.WriteLine("[1] Return Pickup");
+        Console.WriteLine("[2] Return Delivery");
+        Console.Write("Enter Your option: ");
+        if (!int.TryParse(Console.ReadLine(), out int returnOption))
+        {
+            Console.WriteLine("Invalid input. Please enter a number.");
+            continue;
+        }
+
+        if (returnOption == 1)
+        {
+            Console.WriteLine("Return Pickup selected.");
+            displayListOfIcarStation(listOfIcarStation());
+            Console.Write("Choose a branch by ID: ");
+            if (!int.TryParse(Console.ReadLine(), out int selectedBranchId))
+            {
+                Console.WriteLine("Invalid input. Please enter a number.");
+                continue;
+            }
+
+            IcarStation selectedBranch = listOfIcarStation().Find(b => b.Id == selectedBranchId);
+
+            if (selectedBranch != null)
+            {
+                Console.WriteLine($"Return branch selected: {selectedBranch.Id}, Address: {selectedBranch.Location}");
+                break;
+            }
+            else
+            {
+                Console.WriteLine("Invalid branch ID selected.");
+                continue;
+            }
+        }
+        else if (returnOption == 2)
+        {
+            Console.WriteLine("Return Delivery selected.");
+            selectDelivery();
+            break;
+        }
+        else
+        {
+            Console.WriteLine("Invalid option selected for return. Please choose either return pickup or return delivery.");
+            continue;
+        }
+    }
+}
+
+static void selectDelivery()
+{
+    while (true)
     {
         Console.WriteLine("Please enter the delivery address details:");
 
-        // Collect address details
-        string street = PromptForInput("Street:");
-        string block = PromptForInput("Block:");
-        string road = PromptForInput("Road:");
-        string city = PromptForInput("City:");
-        string postalCode = PromptForInput("Postal Code:");
+        string street = enterDeliveryForm("Street:");
+        string block = enterDeliveryForm("Block:");
+        string road = enterDeliveryForm("Road:");
+        string city = enterDeliveryForm("City:");
+        string postalCode = enterDeliveryForm("Postal Code:");
 
-        // Combine address components into a single address string
         string fullAddress = $"Street: {street}, Block: {block}, Road: {road}, City: {city}, Postal Code: {postalCode}";
 
-        // Validate the full address
-        if (ValidateAddress(street, block, road, city, postalCode))
+        if (ValidAddress(street, block, road, city, postalCode))
         {
             Console.WriteLine($"Delivery address confirmed: {fullAddress}");
-            isAddressValid = true; // Exit the loop if the address is valid
-            // Additional delivery logic can be added here
+            break;
         }
         else
         {
@@ -303,20 +310,18 @@ static void HandleDelivery()
     }
 }
 
-
-static string PromptForInput(string prompt)
+static string enterDeliveryForm(string prompt)
 {
     Console.Write($"{prompt} ");
     return Console.ReadLine()?.Trim() ?? string.Empty;
 }
 
-static bool ValidateAddress(string street, string block, string road, string city, string postalCode)
+static bool ValidAddress(string street, string block, string road, string city, string postalCode)
 {
-    // Basic validation example; adjust as needed
     return !string.IsNullOrWhiteSpace(street) &&
            !string.IsNullOrWhiteSpace(block) &&
            !string.IsNullOrWhiteSpace(road) &&
            !string.IsNullOrWhiteSpace(city) &&
            !string.IsNullOrWhiteSpace(postalCode) &&
-           postalCode.Length >= 5; // Example validation for postal code
+           postalCode.Length >= 5;
 }
