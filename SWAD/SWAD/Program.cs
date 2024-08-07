@@ -49,6 +49,7 @@ while (true)
                 selectedVehicle.Booking = selectedBooking;
 
                 HandlePickupAndReturn();
+                DisplayPaymentOptions(selectedVehicle, selectedBooking);
             }
             else
             {
@@ -128,6 +129,7 @@ static void displayListAvailableVehicles(List<Vehicle> vehicles)
         Console.WriteLine($"ID: {vehicle.Id}, Make: {vehicle.Make}, Model: {vehicle.Model}, Mileage: {vehicle.Mileage}, Price: {vehicle.Price}");
     }
 }
+
 
 static void displayAvailableDateTime(List<Booking> sList)
 {
@@ -324,4 +326,74 @@ static bool ValidAddress(string street, string block, string road, string city, 
            !string.IsNullOrWhiteSpace(city) &&
            !string.IsNullOrWhiteSpace(postalCode) &&
            postalCode.Length >= 5;
+}
+
+//come back and edit
+static void DisplayPaymentOptions(Vehicle selectedVehicle, Booking selectedBooking)
+{
+    while (true)
+    {
+        Console.WriteLine("Choose a payment method:");
+        Console.WriteLine("[1] Credit Card");
+        Console.WriteLine("[2] Debit Card");
+        Console.WriteLine("[3] Digital Wallet");
+        Console.Write("Enter Your option: ");
+        if (!int.TryParse(Console.ReadLine(), out int paymentOption))
+        {
+            Console.WriteLine("Invalid input. Please enter a number.");
+            continue;
+        }
+
+        switch (paymentOption)
+        {
+            case 1:
+                Console.WriteLine("Credit Card selected.");
+                ProcessCreditCardPayment(selectedVehicle, selectedBooking);
+                break;
+            case 2:
+                Console.WriteLine("Debit Card selected.");
+                ProcessPayPalPayment(selectedVehicle, selectedBooking);
+                break;
+            case 3:
+                Console.WriteLine("Digital Wallet selected.");
+                ProcessBankTransferPayment(selectedVehicle, selectedBooking);
+                break;
+            default:
+                Console.WriteLine("Invalid payment option selected.");
+                continue;
+        }
+        break;
+    }
+}
+
+static void ProcessCreditCardPayment(Vehicle selectedVehicle, Booking selectedBooking)
+{
+    Console.WriteLine("Processing Credit Card Payment...");
+    // Add logic to process credit card payment
+    Console.WriteLine("Payment Successful.");
+    DisplayConfirmation(selectedVehicle, selectedBooking);
+}
+
+static void ProcessPayPalPayment(Vehicle selectedVehicle, Booking selectedBooking)
+{
+    Console.WriteLine("Processing Debit Card Payment...");
+    // Add logic to process PayPal payment
+    Console.WriteLine("Payment Successful.");
+    DisplayConfirmation(selectedVehicle, selectedBooking);
+}
+
+static void ProcessBankTransferPayment(Vehicle selectedVehicle, Booking selectedBooking)
+{
+    Console.WriteLine("Processing Digital Wallet Payment...");
+    // Add logic to process bank transfer payment
+    Console.WriteLine("Payment Successful.");
+    DisplayConfirmation(selectedVehicle, selectedBooking);
+}
+
+static void DisplayConfirmation(Vehicle selectedVehicle, Booking selectedBooking)
+{
+    Console.WriteLine("Booking and Payment Confirmation:");
+    Console.WriteLine($"Vehicle: {selectedVehicle.Make} {selectedVehicle.Model}");
+    Console.WriteLine($"Booking ID: {selectedBooking.Id}, Start Date: {selectedBooking.StartDate}, Start Time: {selectedBooking.StartTime}, End Date: {selectedBooking.EndDate}, End Time: {selectedBooking.EndTime}");
+    Console.WriteLine("Thank you for your reservation!");
 }
