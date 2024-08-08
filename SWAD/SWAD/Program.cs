@@ -407,7 +407,7 @@ static void displayAvailableDateTime(List<CarOwner> sList,int id)
                postalCode.Length >= 5;
     }
 
-    //come back and edit
+   
     static void DisplayPaymentOptions(Vehicle selectedVehicle, Booking selectedBooking)
     {
         while (true)
@@ -456,12 +456,14 @@ static void ProcessCreditCardPayment(Vehicle selectedVehicle, Booking selectedBo
     string cardNo = enterPaymentForm("Card Number (16 digits):");
     string cvv = enterPaymentForm("CVV (3 digits):");
     string expiryDate = enterPaymentForm("Expiry Date (MM/YY):");
+    Console.WriteLine("");
 
     // Validate the entered credit card details
     if (ValidCardDetails(name, cardNo, cvv, expiryDate))
     {
         Console.WriteLine("Credit card details confirmed.");
         Console.WriteLine("Payment Successful.");
+        Console.WriteLine("");
 
         // Display the booking confirmation
         DisplayConfirmation(selectedVehicle, selectedBooking);
@@ -480,12 +482,14 @@ static void ProcessDebitCardPayment(Vehicle selectedVehicle, Booking selectedBoo
     string cardNo = enterPaymentForm("Card Number (16 digits):");
     string cvv = enterPaymentForm("CVV (3 digits):");
     string expiryDate = enterPaymentForm("Expiry Date (MM/YY):");
+    Console.WriteLine("");
 
     // Validate the entered credit card details
     if (ValidCardDetails(name, cardNo, cvv, expiryDate))
     {
         Console.WriteLine("Credit card details confirmed.");
         Console.WriteLine("Payment Successful.");
+        Console.WriteLine("");
 
         // Display the booking confirmation
         DisplayConfirmation(selectedVehicle, selectedBooking);
@@ -503,13 +507,14 @@ static void ProcessDigitalWalletPayment(Vehicle selectedVehicle, Booking selecte
     string cardNo = enterPaymentForm("Card Number (16 digits):");
     string cvv = enterPaymentForm("CVV (3 digits):");
     string expiryDate = enterPaymentForm("Expiry Date (MM/YY):");
+    Console.WriteLine("");
 
     // Validate the entered credit card details
     if (ValidCardDetails(name, cardNo, cvv, expiryDate))
     {
         Console.WriteLine("Credit card details confirmed.");
         Console.WriteLine("Payment Successful.");
-
+        Console.WriteLine("");
         // Display the booking confirmation
         DisplayConfirmation(selectedVehicle, selectedBooking);
     }
