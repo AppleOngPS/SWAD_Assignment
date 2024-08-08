@@ -1,6 +1,7 @@
 ﻿
 using SWAD;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 void DisplayMenu()
 {
@@ -431,12 +432,12 @@ static void displayAvailableDateTime(List<CarOwner> sList,int id)
                 case 2:
                     Console.WriteLine("Debit Card selected.");
                
-                ProcessPayPalPayment(selectedVehicle, selectedBooking);
+                ProcessDebitCardPayment(selectedVehicle, selectedBooking);
                     break;
                 case 3:
                     Console.WriteLine("Digital Wallet selected.");
                 
-                ProcessBankTransferPayment(selectedVehicle, selectedBooking);
+                ProcessDigitalWalletPayment(selectedVehicle, selectedBooking);
                     break;
                 default:
                     Console.WriteLine("Invalid payment option selected.");
@@ -446,31 +447,130 @@ static void displayAvailableDateTime(List<CarOwner> sList,int id)
         }
     }
 
-    static void ProcessCreditCardPayment(Vehicle selectedVehicle, Booking selectedBooking)
+
+static void ProcessCreditCardPayment(Vehicle selectedVehicle, Booking selectedBooking)
+{
+    
+    //renter entering credit card details
+    string name = enterPaymentForm("Name:");
+    string cardNo = enterPaymentForm("Card Number (16 digits):");
+    string cvv = enterPaymentForm("CVV (3 digits):");
+    string expiryDate = enterPaymentForm("Expiry Date (MM/YY):");
+
+    // Validate the entered credit card details
+    if (ValidCardDetails(name, cardNo, cvv, expiryDate))
     {
-        Console.WriteLine("Processing Credit Card Payment...");
-    // Add logic to process credit card payment
-   
-        
+        Console.WriteLine("Credit card details confirmed.");
         Console.WriteLine("Payment Successful.");
+
+        // Display the booking confirmation
         DisplayConfirmation(selectedVehicle, selectedBooking);
+    }
+    else
+    {
+        Console.WriteLine("Invalid credit card details. Please try again.");
+    }
+}
+
+static void ProcessDebitCardPayment(Vehicle selectedVehicle, Booking selectedBooking)
+{
+    Console.WriteLine("Processing Debit Card Payment...");
+    //renter entering credit card details
+    string name = enterPaymentForm("Name:");
+    string cardNo = enterPaymentForm("Card Number (16 digits):");
+    string cvv = enterPaymentForm("CVV (3 digits):");
+    string expiryDate = enterPaymentForm("Expiry Date (MM/YY):");
+
+    // Validate the entered credit card details
+    if (ValidCardDetails(name, cardNo, cvv, expiryDate))
+    {
+        Console.WriteLine("Credit card details confirmed.");
+        Console.WriteLine("Payment Successful.");
+
+        // Display the booking confirmation
+        DisplayConfirmation(selectedVehicle, selectedBooking);
+    }
+    else
+    {
+        Console.WriteLine("Invalid debit card details. Please try again.");
+    }
+}
+
+static void ProcessDigitalWalletPayment(Vehicle selectedVehicle, Booking selectedBooking)
+{
+    //renter entering credit card details
+    string name = enterPaymentForm("Name:");
+    string cardNo = enterPaymentForm("Card Number (16 digits):");
+    string cvv = enterPaymentForm("CVV (3 digits):");
+    string expiryDate = enterPaymentForm("Expiry Date (MM/YY):");
+
+    // Validate the entered credit card details
+    if (ValidCardDetails(name, cardNo, cvv, expiryDate))
+    {
+        Console.WriteLine("Credit card details confirmed.");
+        Console.WriteLine("Payment Successful.");
+
+        // Display the booking confirmation
+        DisplayConfirmation(selectedVehicle, selectedBooking);
+    }
+    else
+    {
+        Console.WriteLine("Invalid credit card details. Please try again.");
+    }
+}
+
+// Placeholder methods to simulate user input and validation
+static string enterPaymentForm(string prompt)
+{
+    Console.Write(prompt);
+    return Console.ReadLine();
+}
+
+static bool ValidCardDetails(string name, string cardNo, string cvv, string expiryDate)
+{
+    // Check if any field is empty
+    if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(cardNo) ||
+        string.IsNullOrEmpty(cvv) || string.IsNullOrEmpty(expiryDate))
+    {
+        return false;
     }
 
-    static void ProcessPayPalPayment(Vehicle selectedVehicle, Booking selectedBooking)
+    // Validate card number (16 digits)
+    if (!Regex.IsMatch(cardNo, @"^\d{16}$"))
     {
-        Console.WriteLine("Processing Debit Card Payment...");
-        // Add logic to process PayPal payment
-        Console.WriteLine("Payment Successful.");
-        DisplayConfirmation(selectedVehicle, selectedBooking);
+        Console.WriteLine("Card number must be 16 digits.");
+        return false;
     }
 
-    static void ProcessBankTransferPayment(Vehicle selectedVehicle, Booking selectedBooking)
+    // Validate CVV (3 digits)
+    if (!Regex.IsMatch(cvv, @"^\d{3}$"))
     {
-        Console.WriteLine("Processing Digital Wallet Payment...");
-        // Add logic to process bank transfer payment
-        Console.WriteLine("Payment Successful.");
-        DisplayConfirmation(selectedVehicle, selectedBooking);
+        Console.WriteLine("CVV must be 3 digits.");
+        return false;
     }
+
+    // Validate expiry date (not later than today)
+    if (!DateTime.TryParseExact(expiryDate, "MM/yy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime expDate))
+    {
+        Console.WriteLine("Expiry date format is invalid.");
+        return false;
+    }
+
+    DateTime today = DateTime.Today;
+    DateTime lastDayOfExpMonth = new DateTime(expDate.Year, expDate.Month, DateTime.DaysInMonth(expDate.Year, expDate.Month));
+
+    if (lastDayOfExpMonth < today)
+    {
+        Console.WriteLine("Expiry date must not be earlier than today.");
+        return false;
+    }
+
+    return true;
+}
+
+
+
+
 
     static void DisplayConfirmation(Vehicle selectedVehicle, Booking selectedBooking)
     {
@@ -489,6 +589,7 @@ static void reviewBooking(Vehicle selectedVehicle, Booking selectedBooking)
     Console.WriteLine("Proceed to payment");
     Console.WriteLine();
 }
+
 
 static void ManageBooking(List<CarOwner> vlist)
 {
