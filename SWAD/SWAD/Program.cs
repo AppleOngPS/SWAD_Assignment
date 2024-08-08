@@ -6,14 +6,14 @@ using System.Text.RegularExpressions;
 void DisplayMenu()
 {
     Console.WriteLine("Enter Your Option: ");
-    Console.WriteLine("[1] Reserve Car");
-    Console.WriteLine("[2] ManageBooking 2");
+    Console.WriteLine("[1] Reserve Vehicle");
+    Console.WriteLine("[2] Manage Booking");
     Console.WriteLine("[3] option 3");
     Console.WriteLine("[0] Exit");
     Console.WriteLine("Enter Your option: ");
 }
 List<Booking> sList = new List<Booking>();
-List<CarOwner> vehicleList = listOfAvailableVehicle();
+List<CarOwner> listOfAvailableVehicles = getAvailableVehicle();
 int data = 0;
 int option;
 while (true)
@@ -23,28 +23,28 @@ while (true)
     if (option == 1)
     {
         //displayAvailableDateTime(vehicleList);
-        displayListAvailableVehicles(vehicleList);
+        displayListAvailableVehicles(listOfAvailableVehicles);
         // Prompt for vehicle selection
         Console.Write("Enter the ID of the vehicle you want to select: ");
-        if (!int.TryParse(Console.ReadLine(), out int selectedVehicleId))
+        if (!int.TryParse(Console.ReadLine(), out int vehicleId))
         {
             Console.WriteLine("Invalid input. Please enter a number.");
             return;
         }
 
         // Find the CarOwner that has the selected vehicle
-        CarOwner selectedOwner = vehicleList.Find(owner => owner.Vehiclelist.Exists(v => v.Id == selectedVehicleId));
+        CarOwner selectedOwner = listOfAvailableVehicles.Find(owner => owner.Vehiclelist.Exists(v => v.Id == vehicleId));
 
         if (selectedOwner != null)
         {
             // Find the selected vehicle within the selected owner
-            Vehicle selectedVehicle = selectedOwner.Vehiclelist.Find(v => v.Id == selectedVehicleId);
+            Vehicle selectedVehicle = selectedOwner.Vehiclelist.Find(v => v.Id == vehicleId);
             if (selectedVehicle != null)
             {
                 Console.WriteLine($"You selected: {selectedVehicle.Make} {selectedVehicle.Model}");
 
                 // Display available date and time
-                displayAvailableDateTime(vehicleList, selectedOwner.Id);
+                displayAvailableDateTime(listOfAvailableVehicles, selectedOwner.Id);
 
                 // Display available bookings
                 DisplayAvailableBookings(selectedOwner.Bookinglist);
@@ -52,14 +52,14 @@ while (true)
                 // Prompt user to choose a booking
                 Console.Write("Choose an available booking by ID: ");
 
-                if (!int.TryParse(Console.ReadLine(), out int selectedBookingId))
+                if (!int.TryParse(Console.ReadLine(), out int bookingId))
                 {
                     Console.WriteLine("Invalid input. Please enter a number.");
                     return;
                 }
 
                 // Find the selected booking
-                Booking selectedBooking = selectedOwner.Bookinglist.Find(b => b.Id == selectedBookingId);
+                Booking selectedBooking = selectedOwner.Bookinglist.Find(b => b.Id == bookingId);
 
                 if (selectedBooking != null)
                 {
@@ -69,7 +69,8 @@ while (true)
                     selectedVehicle.Booking = selectedBooking; // Assuming each vehicle has one booking
 
                     // Handle pickup and return
-                    HandlePickupAndReturn(selectedVehicle); // Ensure this method is defined
+                    selectPickUp(selectedVehicle, out int pickupOption);
+                    selectReturn(selectedVehicle, pickupOption);
 
                     // Review booking details
                     reviewBooking(selectedVehicle, selectedBooking); // Ensure this method is defined
@@ -99,7 +100,7 @@ while (true)
 
     else if (option == 2)
     {
-        ManageBooking(vehicleList);
+        ManageBooking(listOfAvailableVehicles);
 
         
 
@@ -125,7 +126,7 @@ while (true)
     }
 }
 
-static List<CarOwner> listOfAvailableVehicle()
+static List<CarOwner>getAvailableVehicle()
 {
     // List of CarOwner objects
     return new List<CarOwner>
@@ -241,131 +242,131 @@ static void displayAvailableDateTime(List<CarOwner> sList,int id)
 
 
 
-    //select delivery
-    static void HandlePickupAndReturn(Vehicle selectedVehicle)
+//select delivery
+static void selectPickUp(Vehicle selectedVehicle, out int pickupOption)
+{
+    while (true)
     {
-    int pickupOption;
-        while (true)
+        Console.WriteLine("Choose pickup or delivery option for pickup:");
+        Console.WriteLine("[1] Pickup");
+        Console.WriteLine("[2] Delivery");
+        Console.Write("Enter Your option: ");
+        if (!int.TryParse(Console.ReadLine(), out pickupOption))
         {
-            Console.WriteLine("Choose pickup or delivery option for pickup:");
-            Console.WriteLine("[1] Pickup");
-            Console.WriteLine("[2] Delivery");
-            Console.Write("Enter Your option: ");
-            if (!int.TryParse(Console.ReadLine(), out  pickupOption))
+            Console.WriteLine("Invalid input. Please enter a number.");
+            continue;
+        }
+
+        if (pickupOption == 1)
+        {
+            Console.WriteLine("Pickup selected.");
+            displayListOfIcarStation(listOfIcarStation());
+            Console.Write("Choose a branch by ID: ");
+            if (!int.TryParse(Console.ReadLine(), out int validIcarStationId))
             {
                 Console.WriteLine("Invalid input. Please enter a number.");
                 continue;
             }
 
-            if (pickupOption == 1)
-            {
-            
-                Console.WriteLine("Pickup selected.");
-                displayListOfIcarStation(listOfIcarStation());
-                Console.Write("Choose a branch by ID: ");
-                if (!int.TryParse(Console.ReadLine(), out int validIcarStationId))
-                {
-                    Console.WriteLine("Invalid input. Please enter a number.");
-                    continue;
-                }
+            IcarStation validIcarStation = listOfIcarStation().Find(b => b.Id == validIcarStationId);
 
-                IcarStation validIcarStation = listOfIcarStation().Find(b => b.Id == validIcarStationId);
-
-                if (validIcarStation != null)
-                {
-                    Console.WriteLine($"Pickup branch selected: {validIcarStation.Id}, Address: {validIcarStation.Location}");
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid branch ID selected.");
-                    continue;
-                }
-            }
-            else if (pickupOption == 2)
+            if (validIcarStation != null)
             {
-           
-                Console.WriteLine("Delivery selected.");
-                selectDelivery();
+                Console.WriteLine($"Pickup branch selected: {validIcarStation.Id}, Address: {validIcarStation.Location}");
                 break;
             }
             else
             {
-                Console.WriteLine("Invalid option selected for pickup. Please choose either pickup or delivery.");
+                Console.WriteLine("Invalid branch ID selected.");
                 continue;
             }
         }
-
-        while (true)
+        else if (pickupOption == 2)
         {
-            Console.WriteLine("Choose return option:");
-            Console.WriteLine("[1] Return Pickup");
-            Console.WriteLine("[2] Return Delivery");
-            Console.Write("Enter Your option: ");
-            if (!int.TryParse(Console.ReadLine(), out int returnOption))
+            Console.WriteLine("Delivery selected.");
+            selectDelivery();
+            break;
+        }
+        else
+        {
+            Console.WriteLine("Invalid option selected for pickup. Please choose either pickup or delivery.");
+            continue;
+        }
+    }
+}
+
+static void selectReturn(Vehicle selectedVehicle, int pickupOption)
+{
+    while (true)
+    {
+        Console.WriteLine("Choose return option:");
+        Console.WriteLine("[1] Return Pickup");
+        Console.WriteLine("[2] Return Delivery");
+        Console.Write("Enter Your option: ");
+        if (!int.TryParse(Console.ReadLine(), out int returnOption))
+        {
+            Console.WriteLine("Invalid input. Please enter a number.");
+            continue;
+        }
+
+        if (returnOption == 1)
+        {
+            Console.WriteLine("Return Pickup selected.");
+            displayListOfIcarStation(listOfIcarStation());
+            Console.Write("Choose a branch by ID: ");
+            if (!int.TryParse(Console.ReadLine(), out int selectedBranchId))
             {
                 Console.WriteLine("Invalid input. Please enter a number.");
                 continue;
             }
 
-            if (returnOption == 1)
-            {
-                Console.WriteLine("Return Pickup selected.");
-                displayListOfIcarStation(listOfIcarStation());
-                Console.Write("Choose a branch by ID: ");
-                if (!int.TryParse(Console.ReadLine(), out int selectedBranchId))
-                {
-                    Console.WriteLine("Invalid input. Please enter a number.");
-                    continue;
-                }
+            IcarStation selectedBranch = listOfIcarStation().Find(b => b.Id == selectedBranchId);
 
-                IcarStation selectedBranch = listOfIcarStation().Find(b => b.Id == selectedBranchId);
-
-                if (selectedBranch != null)
-                {
-                    Console.WriteLine($"Return branch selected: {selectedBranch.Id}, Address: {selectedBranch.Location}");
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid branch ID selected.");
-                    continue;
-                }
-            }
-            else if (returnOption == 2)
+            if (selectedBranch != null)
             {
-            
-                Console.WriteLine("Return Delivery selected.");
-                selectDelivery();
-            if (returnOption == 2 && pickupOption == 2)
-            {
-                Console.WriteLine($"${selectedVehicle.Price + 100}");
-            }
-            else if (returnOption == 2)
-            {
-                Console.WriteLine($"${selectedVehicle.Price + 50}");
-            }
-            else if ( pickupOption==2)
-            {
-                Console.WriteLine($"${selectedVehicle.Price + 50}");
+                Console.WriteLine($"Return branch selected: {selectedBranch.Id}, Address: {selectedBranch.Location}");
+                break;
             }
             else
             {
-                Console.WriteLine($"${selectedVehicle.Price}");
-            }
-            break;
-            }
-            else
-            {
-                Console.WriteLine("Invalid option selected for return. Please choose either return pickup or return delivery.");
+                Console.WriteLine("Invalid branch ID selected.");
                 continue;
             }
+        }
+        else if (returnOption == 2)
+        {
+            Console.WriteLine("Return Delivery selected.");
+            selectDelivery();
 
-
+            // Calculate the price based on pickup and return options
+            if (pickupOption == 2 && returnOption == 2)
+            {
+                Console.WriteLine($"Total Price: ${selectedVehicle.Price + 100}");
+            }
+            else if (returnOption == 2)
+            {
+                Console.WriteLine($"Total Price: ${selectedVehicle.Price + 50}");
+            }
+            else if (pickupOption == 2)
+            {
+                Console.WriteLine($"Total Price: ${selectedVehicle.Price + 50}");
+            }
+            else
+            {
+                Console.WriteLine($"Total Price: ${selectedVehicle.Price}");
+            }
+            break;
+        }
+        else
+        {
+            Console.WriteLine("Invalid option selected for return. Please choose either return pickup or return delivery.");
+            continue;
         }
     }
+}
 
-    static void selectDelivery()
+
+static void selectDelivery()
     {
         while (true)
         {
@@ -379,7 +380,7 @@ static void displayAvailableDateTime(List<CarOwner> sList,int id)
 
             string fullAddress = $"Street: {street}, Block: {block}, Road: {road}, City: {city}, Postal Code: {postalCode}";
 
-            if (ValidAddress(street, block, road, city, postalCode))
+            if (validate(street, block, road, city, postalCode))
             {
                 Console.WriteLine($"Delivery address confirmed: {fullAddress}");
                 break;
@@ -397,7 +398,7 @@ static void displayAvailableDateTime(List<CarOwner> sList,int id)
         return Console.ReadLine()?.Trim() ?? string.Empty;
     }
 
-    static bool ValidAddress(string street, string block, string road, string city, string postalCode)
+    static bool validate(string street, string block, string road, string city, string postalCode)
     {
         return !string.IsNullOrWhiteSpace(street) &&
                !string.IsNullOrWhiteSpace(block) &&
@@ -427,17 +428,17 @@ static void displayAvailableDateTime(List<CarOwner> sList,int id)
             {
                 case 1:
                     Console.WriteLine("Credit Card selected.");
-                    ProcessCreditCardPayment(selectedVehicle, selectedBooking);
+                    selectCreditCard(selectedVehicle, selectedBooking);
                     break;
                 case 2:
                     Console.WriteLine("Debit Card selected.");
                
-                ProcessDebitCardPayment(selectedVehicle, selectedBooking);
+                selectDebitCard(selectedVehicle, selectedBooking);
                     break;
                 case 3:
                     Console.WriteLine("Digital Wallet selected.");
                 
-                ProcessDigitalWalletPayment(selectedVehicle, selectedBooking);
+                selectDigitalWallet(selectedVehicle, selectedBooking);
                     break;
                 default:
                     Console.WriteLine("Invalid payment option selected.");
@@ -448,7 +449,7 @@ static void displayAvailableDateTime(List<CarOwner> sList,int id)
     }
 
 
-static void ProcessCreditCardPayment(Vehicle selectedVehicle, Booking selectedBooking)
+static void selectCreditCard(Vehicle selectedVehicle, Booking selectedBooking)
 {
     
     //renter entering credit card details
@@ -474,7 +475,7 @@ static void ProcessCreditCardPayment(Vehicle selectedVehicle, Booking selectedBo
     }
 }
 
-static void ProcessDebitCardPayment(Vehicle selectedVehicle, Booking selectedBooking)
+static void selectDebitCard(Vehicle selectedVehicle, Booking selectedBooking)
 {
     Console.WriteLine("Processing Debit Card Payment...");
     //renter entering credit card details
@@ -500,7 +501,7 @@ static void ProcessDebitCardPayment(Vehicle selectedVehicle, Booking selectedBoo
     }
 }
 
-static void ProcessDigitalWalletPayment(Vehicle selectedVehicle, Booking selectedBooking)
+static void selectDigitalWallet(Vehicle selectedVehicle, Booking selectedBooking)
 {
     //renter entering credit card details
     string name = enterPaymentForm("Name:");
