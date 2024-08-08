@@ -586,7 +586,7 @@ static void reviewBooking(Vehicle selectedVehicle, Booking selectedBooking)
     Console.WriteLine("Booking details:");
     Console.WriteLine($"Vehicle: {selectedVehicle.Make}, {selectedVehicle.Model} ({selectedVehicle.Type}), Mileage:{selectedVehicle.Mileage}, Price:${selectedVehicle.Price}");
     Console.WriteLine($"Booking ID: {selectedBooking.Id}, Start Date: {selectedBooking.StartDate}, Start Time: {selectedBooking.StartTime}, End Date: {selectedBooking.EndDate}, End Time: {selectedBooking.EndTime}");
-    Console.WriteLine("Proceed to payment");
+    Console.WriteLine("-----------------Proceed to payment-----------------");
     Console.WriteLine();
 }
 
