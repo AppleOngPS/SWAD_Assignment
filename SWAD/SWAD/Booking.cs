@@ -61,30 +61,30 @@ namespace SWAD
             }
         }
 
-        private IcarStation icarStation;
-        public IcarStation IcarStation
+        private IcarStation icarStationpickup;
+        public IcarStation IcarStationPickup
         {
-            get {return icarStation;}
+            get {return icarStationpickup; }
             set
             {
-                if (icarStation != value)
+                if (icarStationpickup != value)
                 {
-                    icarStation = value;
-                    value.Booking = this;
+                    icarStationpickup = value;
+                    value.PickupBooking = this;
                 }
             }
         }
 
-        private IcarStation returns;
-        public IcarStation Returns
+        private IcarStation icarStationreturn;
+        public IcarStation IcarStationReturn
         {
-            get { return returns; }
+            get { return icarStationreturn; }
             set
             {
-                if (returns != value)
+                if (icarStationreturn != value)
                 {
-                    returns = value;
-                    value.Booking = this;
+                    icarStationreturn = value;
+                    value.ReturnBooking = this;
                 }
             }
         }

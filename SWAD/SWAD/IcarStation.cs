@@ -14,35 +14,38 @@ namespace SWAD
         public string Location { get { return location; } set { location = value; } }
 
 
-        private Booking booking;
-        public Booking Booking
+        private Booking pickupBooking;
+        public Booking PickupBooking
         {
-            get { return booking; }
+            get { return pickupBooking; }
             set
             {
-                if (booking != value)
+                if (pickupBooking != value)
                 {
-                    booking = value;
-                    value.IcarStation = this;
+                    pickupBooking = value;
+                    value.IcarStationPickup = this;
+
                 }
-            }
-        }
-        private Booking booking2;
-        public Booking Booking2
-        {
-            get { return booking2; }
-            set
-            {
-                if (booking2 != value)
-                {
-                    booking2 = value;
-                    value.Returns = this;
-                }
+
             }
         }
 
+        private Booking returnBooking;
+        public Booking ReturnBooking
+        {
+            get { return returnBooking; }
+            set
+            {
+                if (returnBooking != value)
+                {
+                    returnBooking = value;
+                    value.IcarStationReturn = this;
+                }
+            }
+
+
+
+        }
 
     }
-
-
 }

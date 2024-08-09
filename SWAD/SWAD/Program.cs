@@ -14,8 +14,10 @@ void DisplayMenu()
 }
 List<Booking> sList = new List<Booking>();
 List<CarOwner> listOfAvailableVehicles = getAvailableVehicle();
+Renter renter = new Renter();
 int data = 0;
 int option;
+string icar;
 while (true)
 {
     DisplayMenu();
@@ -69,7 +71,7 @@ while (true)
                     selectedVehicle.Booking = selectedBooking; // Assuming each vehicle has one booking
 
                     // Handle pickup and return
-                    selectPickUp(selectedVehicle, out int pickupOption);
+                    selectPickUp(selectedVehicle, out int pickupOption,out icar);
                     selectReturn(selectedVehicle, pickupOption);
 
                     // Review booking details
@@ -77,6 +79,7 @@ while (true)
                     
                     // Display payment options
                     DisplayPaymentOptions(selectedVehicle, selectedBooking); // Ensure this method is defined
+                    createbooking(selectedVehicle, selectedBooking,renter,icar);
                 }
                 else
                 {
@@ -111,6 +114,13 @@ while (true)
         else if (option == 3)
     {
         Console.WriteLine();
+        foreach (Booking selectedBooking in renter.TrackUpComingRental)
+        {
+            Console.WriteLine($"Booking ID: {selectedBooking.Id}, Start Date: {selectedBooking.StartDate}, Start Time: {selectedBooking.StartTime}, End Date: {selectedBooking.EndDate}, End Time: {selectedBooking.EndTime}");
+            Console.WriteLine($"pickup:{selectedBooking.IcarStationPickup.Location}");
+
+        }
+
     }
          else if (option == 0)
     {
@@ -243,8 +253,9 @@ static void displayAvailableDateTime(List<CarOwner> sList,int id)
 
 
 //select delivery
-static void selectPickUp(Vehicle selectedVehicle, out int pickupOption)
+static void selectPickUp(Vehicle selectedVehicle, out int pickupOption,out string icarStation)
 {
+    icarStation=string.Empty;
     while (true)
     {
         Console.WriteLine("Choose pickup or delivery option for pickup:");
@@ -273,6 +284,8 @@ static void selectPickUp(Vehicle selectedVehicle, out int pickupOption)
             if (validIcarStation != null)
             {
                 Console.WriteLine($"Pickup branch selected: {validIcarStation.Id}, Address: {validIcarStation.Location}");
+                icarStation = validIcarStation.Location;
+                Console.WriteLine($"qqqqqqqqqqqqqqq{icarStation}");
                 break;
             }
             else
@@ -596,7 +609,19 @@ static void reviewBooking(Vehicle selectedVehicle, Booking selectedBooking)
     Console.WriteLine();
 }
 
+static void createbooking(Vehicle selectedVehicle, Booking selectedBooking,Renter r,string i)
+{
+    Console.WriteLine($"wwwwwwwwwwwwwwwww{i}");
+    // Assign pickup and return locations
+    selectedBooking.IcarStationPickup = new IcarStation();
+    selectedBooking.IcarStationPickup.Location = i;
 
+    // Assign the selected vehicle to the booking
+    selectedBooking.Vehicle = selectedVehicle;
+
+    // Add the booking to the renter's upcoming rentals
+    r.TrackUpComingRental.Add(selectedBooking);
+}
 static void ManageBooking(List<CarOwner> vlist)
 {
     try
