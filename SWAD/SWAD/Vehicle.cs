@@ -130,14 +130,18 @@ namespace SWAD
 
 
         }
-        public void getAvailableDateTime(int boookingId)
+        public void getAvailableDateTime(int bookingId)
         {
             
-           booking = Program.carOwner.Bookinglist[boookingId];
+           booking = Program.carOwner.Bookinglist[bookingId];
         }
         public void getetAvailableVehicle()
         {
 
+        }
+        public void bookingConfirmationAlert()
+        {
+            Console.WriteLine("Booking confirmed!");
         }
         public override string ToString()
         {

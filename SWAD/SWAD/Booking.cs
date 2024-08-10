@@ -184,11 +184,17 @@ namespace SWAD
         }
         public void addAddress(string street, string block, string road, string city, string postalCode)
         {
-            deliveryReturn.addAddress(street,block,road,city,postalCode);
+            Delivery delivery = new Delivery();
+            delivery.addAddress(street, block, road, city, postalCode);
         }
         public void selecticarstation()
         {
-            icarStationpickup.selecticarstation();
+            IcarStation icarStation = new IcarStation();
+            icarStation.selecticarstation();
+        }
+        public void bookingConfirmationAlert()
+        {
+            Console.WriteLine("Booking confirmed!");
         }
         public override string ToString()
         {

@@ -29,7 +29,10 @@ namespace SWAD
             backgroundcheckStatus = bs;
             monthlyrentalminimum = m;
         }
-
+        public void bookingConfirmationAlert()
+        {
+            Console.WriteLine("Booking confirmed!");
+        }
 
         public void getlistofUpComingBooking(int bookingid)
         {

@@ -26,7 +26,10 @@ namespace SWAD
 
         }
 
-
+        public void bookingConfirmationAlert()
+        {
+            Console.WriteLine("Booking confirmed!");
+        }
         public override string ToString()
         {
             return $"earning: {earning}";

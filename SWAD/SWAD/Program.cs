@@ -10,6 +10,7 @@ internal class Program
     public static int Id { get; set; }
     public static Renter renter { get; set; }
     public static CarOwner carOwner { get; set; }
+    public static Vehicle vehicle{ get; set; }
     public static int vehicleid { get; set; }
     public static int bookingId { get; set; }
     public static DateTime startdate { get; set; }
@@ -110,7 +111,7 @@ internal class Program
 
                                     // Handle pickup and return
                                     selectPickUpOption(vehicle, out int pickupOption);
-                                displayOptionforreturn();
+                                    displayOptionforreturn();
                                     selectReturnOption(vehicle, pickupOption);
 
                                     // Review booking details
@@ -119,7 +120,13 @@ internal class Program
                                     // Display payment options
                                     selectPayment(vehicle, selectedBooking); // Ensure this method is defined
                                     createbooking(vehicle, selectedBooking, renter);
-                                }
+
+                                    bookingConfirmationAlert();
+                                
+
+                                
+
+                            }
                                 else
                                 {
                                     Console.WriteLine("Invalid booking ID selected.");
@@ -537,33 +544,50 @@ internal class Program
                 break;
             }
         }
-        static void enterCardDetail(string name ,string cardNo,string cvv,string expiryDate)
+        static void DisplaycardDetailsForm()
         {
             Console.WriteLine("Name:");
-            name=Console.ReadLine();
+            Console.WriteLine();
+            
             Console.WriteLine("Card Number (16 digits):");
-            cardNo=Console.ReadLine();
+            Console.WriteLine();
+      
             Console.WriteLine("CVV (3 digits):");
-            cvv= Console.ReadLine();
+            Console.WriteLine();
+            
             Console.WriteLine("Expiry Date (MM/YY):");
-            expiryDate= Console.ReadLine();
-            Payment payment=new Payment();
-            payment.validate(name, cardNo,cvv,expiryDate);
+            Console.WriteLine();
+            
+            //Payment payment=new Payment();
+            //payment.validate(name, cardNo,cvv,expiryDate);
             /*Program.name = name;
             Program.cardNo = cardNo;
             Program.cvv = cvv;
             Program.expiryDate = expiryDate;*/
         }
+        static void enterCardDetails(string name, string cardNo, string cvv, string expiryDate)
+        {
+            name = Console.ReadLine();
+            cardNo = Console.ReadLine();
+            cvv = Console.ReadLine();
+            expiryDate = Console.ReadLine();
+            Console.WriteLine(name);
+            Payment payment = new Payment();
+            payment.validate(name, cardNo, cvv, expiryDate);
+        }
+     
 
         static void selectCreditCard(Vehicle selectedVehicle, Booking selectedBooking)
         {
 
             //renter entering credit card details
-            string name = enterPaymentForm("Name:");
-            string cardNo = enterPaymentForm("Card Number (16 digits):");
-            string cvv = enterPaymentForm("CVV (3 digits):");
-            string expiryDate = enterPaymentForm("Expiry Date (MM/YY):");
-            Console.WriteLine("");
+            //string name = enterPaymentForm("Name:");
+            //string cardNo = enterPaymentForm("Card Number (16 digits):");
+            //string cvv = enterPaymentForm("CVV (3 digits):");
+            //string expiryDate = enterPaymentForm("Expiry Date (MM/YY):");
+            //Console.WriteLine("");
+            DisplaycardDetailsForm();
+            enterCardDetails( name,  cardNo,  cvv, expiryDate);
 
             // Validate the entered credit card details
             if (ValidCardDetails(name, cardNo, cvv, expiryDate))
@@ -583,45 +607,23 @@ internal class Program
 
         static void selectDebitCard(Vehicle selectedVehicle, Booking selectedBooking)
         {
-            Console.WriteLine("Processing Debit Card Payment...");
+
             //renter entering credit card details
-            string name = enterPaymentForm("Name:");
-            string cardNo = enterPaymentForm("Card Number (16 digits):");
-            string cvv = enterPaymentForm("CVV (3 digits):");
-            string expiryDate = enterPaymentForm("Expiry Date (MM/YY):");
-            Console.WriteLine("");
+            //string name = enterPaymentForm("Name:");
+            //string cardNo = enterPaymentForm("Card Number (16 digits):");
+            //string cvv = enterPaymentForm("CVV (3 digits):");
+            //string expiryDate = enterPaymentForm("Expiry Date (MM/YY):");
+            //Console.WriteLine("");
+            DisplaycardDetailsForm();
+            enterCardDetails(name, cardNo, cvv, expiryDate);
 
             // Validate the entered credit card details
             if (ValidCardDetails(name, cardNo, cvv, expiryDate))
             {
-                Console.WriteLine("Credit card details confirmed.");
+                Console.WriteLine("Debit card details confirmed.");
                 Console.WriteLine("Payment Successful.");
                 Console.WriteLine("");
 
-                // Display the booking confirmation
-                DisplayConfirmation(selectedVehicle, selectedBooking);
-            }
-            else
-            {
-                Console.WriteLine("Invalid debit card details. Please try again.");
-            }
-        }
-
-        static void selectDigitalWallet(Vehicle selectedVehicle, Booking selectedBooking)
-        {
-            //renter entering credit card details
-            string name = enterPaymentForm("Name:");
-            string cardNo = enterPaymentForm("Card Number (16 digits):");
-            string cvv = enterPaymentForm("CVV (3 digits):");
-            string expiryDate = enterPaymentForm("Expiry Date (MM/YY):");
-            Console.WriteLine("");
-
-            // Validate the entered credit card details
-            if (ValidCardDetails(name, cardNo, cvv, expiryDate))
-            {
-                Console.WriteLine("Credit card details confirmed.");
-                Console.WriteLine("Payment Successful.");
-                Console.WriteLine("");
                 // Display the booking confirmation
                 DisplayConfirmation(selectedVehicle, selectedBooking);
             }
@@ -630,13 +632,39 @@ internal class Program
                 Console.WriteLine("Invalid credit card details. Please try again.");
             }
         }
-
-        // Placeholder methods to simulate user input and validation
-        static string enterPaymentForm(string prompt)
+        static void selectDigitalWallet(Vehicle selectedVehicle, Booking selectedBooking)
         {
-            Console.Write(prompt);
-            return Console.ReadLine();
+
+            //renter entering credit card details
+            //string name = enterPaymentForm("Name:");
+            //string cardNo = enterPaymentForm("Card Number (16 digits):");
+            //string cvv = enterPaymentForm("CVV (3 digits):");
+            //string expiryDate = enterPaymentForm("Expiry Date (MM/YY):");
+            //Console.WriteLine("");
+            DisplaycardDetailsForm();
+            enterCardDetails(name, cardNo, cvv, expiryDate);
+
+            // Validate the entered credit card details
+            if (ValidCardDetails(name, cardNo, cvv, expiryDate))
+            {
+                Console.WriteLine("Credit card details confirmed.");
+                Console.WriteLine("Payment Successful.");
+                Console.WriteLine("");
+
+                // Display the booking confirmation
+                DisplayConfirmation(selectedVehicle, selectedBooking);
+            }
+            else
+            {
+                Console.WriteLine("Invalid digital wallet details. Please try again.");
+            }
         }
+        // Placeholder methods to simulate user input and validation
+        //static string enterPaymentForm(string prompt)
+        //{
+        //    Console.Write(prompt);
+        //    return Console.ReadLine();
+        //}
 
         static bool ValidCardDetails(string name, string cardNo, string cvv, string expiryDate)
         {
@@ -681,7 +709,13 @@ internal class Program
         }
 
 
-
+        static void bookingConfirmationAlert()
+        {
+            vehicle = new Vehicle();
+            vehicle.bookingConfirmationAlert();
+            carOwner.bookingConfirmationAlert();
+            renter.bookingConfirmationAlert();
+        }
 
 
         static void DisplayConfirmation(Vehicle selectedVehicle, Booking selectedBooking)
