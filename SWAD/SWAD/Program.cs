@@ -26,6 +26,7 @@ internal class Program
     public static string cardNo { get; set; }
     public static string expiryDate {  get; set; }
     public static string location { get; set; }
+    public static string fulladdress { get; set; }  
     public static List<IcarStation> stations { get; set; }
     private static void Main(string[] args)
     {
@@ -105,12 +106,13 @@ internal class Program
                                 if (selectedBooking != null)
                                 {
                                     Console.WriteLine($"You selected: Booking ID: {selectedBooking.Id}, Start Date: {selectedBooking.StartDate:dd/MM/yyyy}, Start Time: {selectedBooking.StartTime:HH:mm}, End Date: {selectedBooking.EndDate:dd/MM/yyyy}, End Time: {selectedBooking.EndTime:HH:mm}");
-
+                                      Program.bookingId = selectedBooking.Id;
                                     // Add the booking to the selected vehicle's list
                                     vehicle.Booking = selectedBooking; // Assuming each vehicle has one booking
 
                                     // Handle pickup and return
                                     selectPickUpOption(vehicle, out int pickupOption);
+                                   Program.pickupOption = pickupOption;
                                     displayOptionforreturn();
                                     selectReturnOption(vehicle, pickupOption);
 
@@ -166,9 +168,10 @@ internal class Program
             }
             else if (option == 3)
             {
+                Console.WriteLine(Program.bookingId);
                 Console.WriteLine();
                 
-
+                selectTrackUpComingBooking();
             }
             else if (option == 0)
             {
@@ -186,9 +189,12 @@ internal class Program
 
         static List<Vehicle> getAvailableVehicle()
         {
-           
-            return carOwner.Vehiclelist;      
+            Vehicle vehicle = new Vehicle();
+
+           return vehicle.getetAvailableVehicle();
+                 
         }
+
 
 
         static List<IcarStation> getAvailableIcarStation()
@@ -388,7 +394,7 @@ internal class Program
                     Console.WriteLine("Invalid input. Please enter a number.");
                     continue;
                 }
-
+                Program.pickupOption=returnOption;
                 if (returnOption == 1)
                 {
                     Console.WriteLine("Return Pickup selected.");
@@ -463,6 +469,7 @@ internal class Program
                 {
                     Console.WriteLine($"Delivery address confirmed: {fullAddress}");
                     addAddress(street, block, road, city, postalCode);
+                    fulladdress = fullAddress;
                     break;
                 }
                 else
@@ -744,8 +751,10 @@ internal class Program
             selectedBooking.IcarStationReturn = new IcarStation();
             selectedBooking.Deliverypickup = new Delivery();
             selectedBooking.DeliveryReturn = new Delivery();
-            //selectedBooking.IcarStationPickup.Location = i;
-            //selectedBooking.IcarStationReturn.Location = i;
+            selectedBooking.IcarStationPickup.Location = Program.location;
+            selectedBooking.IcarStationReturn.Location = Program.location;
+            selectedBooking.Deliverypickup.Location = Program.fulladdress;
+            selectedBooking.DeliveryReturn.Location = Program.fulladdress;
 
             // Assign the selected vehicle to the booking
             selectedBooking.Vehicle = selectedVehicle;
@@ -846,6 +855,7 @@ internal class Program
         {
 
         }
+        /*
         static void ManageBooking(List<CarOwner> vlist)
         {
             try
@@ -977,7 +987,7 @@ internal class Program
             {
                 Console.WriteLine($"Unexpected error: {ex.Message}");
             }
-        }
+        }*/
 
 
         static void selectTrackUpComingBooking()
@@ -1031,19 +1041,104 @@ internal class Program
 
         static void selectPickupOrReturnLocation()
         {
-            Console.WriteLine("");
-            string ans =Console.ReadLine();
+            Console.WriteLine("Select a Location: ");
+            Console.WriteLine("[1] Pickup Location: ");
+            Console.WriteLine("[2] Return Location: ");
+            Console.Write("Enter your choice: ");
 
+            string input = Console.ReadLine();
+
+            if (input == "1")
+            {
+                //modifyPickupLocation();
+            }
+
+            if (input == "2")
+            {
+               // modifyReturnLocation();
+            }
+            else
+            {
+                Console.WriteLine("Invalid option. Please select 1 or 2.");
+            }
         }
-
+        /*
         static void modifyPickupLocation()
         {
+            // Display current location from upcoming booking
+            Console.WriteLine($"Current Pickup Location: {pickupLocation}");
+            // modify iCar station to delivery
+            Console.WriteLine("Would you like to change the pickup location to a delivery option? (Yes/No)");
+            // call getModificationLocation method
+            string changeLocation = Console.ReadLine().ToLower();
 
+            if (changeLocation == "Yes")
+            {
+                Console.Write("Enter new Pickup Location: ");
+                pickupLocation = Console.ReadLine();
+                Console.WriteLine($"Pickup Location Updated: {pickuplocation)");
+            }
+            else
+            {
+                Console.WriteLine("Pickup Location remains the same.");
+            }
+
+            getModificationCost();
+            displayModifyCost();
+            confirmModifyCost();
         }
 
         static void modifyReturnLocation()
         {
+            // Display current location from upcoming booking
+            Console.WriteLine($"Current Return Location: {returnLocation}");
+            // modify iCar station to delivery
+            Console.WriteLine("Would you like to change the return location to a delivery option? (Yes/No)");
+            // call getModificationLocation method
+            string changeLocation = Console.ReadLine().ToLower();
 
+            if (changeLocation == "Yes")
+            {
+                Console.Write("Enter new Return Location: ");
+                returnLocation = Console.ReadLine();
+                Console.WriteLine($"Pickup Location Updated: {returnlocation)");
+            }
+            else
+            {
+                Console.WriteLine("Pickup Location remains the same.");
+            }
+
+            getModificationCost();
+            displayModifyCost();
+            confirmModifyCost();
         }
+
+        static void getModificationCost()
+        {
+            // set cost to 50 dollars
+            double modificationCost = 50.0;
+        }
+
+        static void displayModifyCost()
+        {
+            Console.WriteLine($"Modification Cost: {getModificationCost}");  // display value of getModificationCost
+        }
+
+        static void confirmModifyCost()
+        {
+            // a confirmation button and link to payment method
+            Console.WriteLine("Do you want to confirm the modification? (Yes/No");
+            string confirm = Console.ReadLine().ToLower();
+
+            if (confirm == "Yes")
+            {
+                Console.WriteLine("Modification confirmed. Proceeding to payment.");
+                // call payment methods
+            }
+            else
+            {
+                Console.WriteLine("Modification cancelled.");
+            }
+        }*/
     }
 }

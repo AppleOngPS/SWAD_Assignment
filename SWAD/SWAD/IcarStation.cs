@@ -68,7 +68,7 @@ namespace SWAD
                 if (booking.Id == Program.bookingId)
                 {
                     int x = Program.renter.TrackUpComingRental.IndexOf(booking);
-
+                    Console.WriteLine($"qqq{x}");
                     // Ensure that there are bookings in the list
                     if (x >= 0)
                     {

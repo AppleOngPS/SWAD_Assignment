@@ -135,9 +135,10 @@ namespace SWAD
             
            booking = Program.carOwner.Bookinglist[bookingId];
         }
-        public void getetAvailableVehicle()
+        public List< Vehicle> getetAvailableVehicle()
         {
-
+            return Program.carOwner.Vehiclelist;
+            
         }
         public void bookingConfirmationAlert()
         {

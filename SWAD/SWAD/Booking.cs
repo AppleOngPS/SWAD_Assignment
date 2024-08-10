@@ -191,6 +191,7 @@ namespace SWAD
         {
             IcarStation icarStation = new IcarStation();
             icarStation.selecticarstation();
+            
         }
         public void bookingConfirmationAlert()
         {
