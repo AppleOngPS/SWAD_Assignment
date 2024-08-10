@@ -52,6 +52,45 @@ namespace SWAD
             Id = id;
             Location = l;
         }
+        public List<IcarStation> getAvailableIcarStation()
+        {
+           List<IcarStation> icarStations = new List<IcarStation>();
+            icarStations.Add(new IcarStation(1, "Clementi Branch"));
+            icarStations.Add(new IcarStation(2, "Jurong Branch"));
+            icarStations.Add(new IcarStation(3, "Tampines Branch"));
+            return icarStations;
+
+        }
+        public void selecticarstation()
+        {
+            foreach (Booking booking in Program.renter.TrackUpComingRental)
+            {
+                if (booking.Id == Program.bookingId)
+                {
+                    int x = Program.renter.TrackUpComingRental.IndexOf(booking);
+
+                    // Ensure that there are bookings in the list
+                    if (x >= 0)
+                    {
+                        if (Program.pickupOption == 1)
+                        {
+                            // Update the address for the last booking's pickup delivery
+                            Program.renter.TrackUpComingRental[x].IcarStationPickup.Location = Program.location;
+                            Console.WriteLine("Address updated for the latest booking.");
+                        }
+                        else if (Program.pickupOption == 2)
+                        {
+                            Program.renter.TrackUpComingRental[x].IcarStationReturn.Location = Program.location;
+                            Console.WriteLine("Address updated for the latest booking.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("No bookings available to update the address.");
+                    }
+                }
+            }
+        }
 
     }
 }

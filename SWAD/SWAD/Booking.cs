@@ -157,7 +157,7 @@ namespace SWAD
             //int x = Program.carOwner.Bookinglist.Count() - 1;
             foreach(Vehicle vehicle in Program.carOwner.Vehiclelist)
             {
-                Console.WriteLine(Program.vehicleid);
+                //Console.WriteLine(Program.vehicleid);
                 if(vehicle.Id ==Program.vehicleid)
                 {
                     int x = Program.carOwner.Vehiclelist.IndexOf(vehicle);
@@ -182,7 +182,14 @@ namespace SWAD
         {
             Program.carOwner.Bookinglist.Add(bookingSlot);
         }
-
+        public void addAddress(string street, string block, string road, string city, string postalCode)
+        {
+            deliveryReturn.addAddress(street,block,road,city,postalCode);
+        }
+        public void selecticarstation()
+        {
+            icarStationpickup.selecticarstation();
+        }
         public override string ToString()
         {
             return $"Booking ID: {Id}\nStart Date: {StartDate}\nStart Time: {StartTime}\nEnd Date: {EndDate}\nEnd Time: {EndTime}";

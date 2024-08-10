@@ -47,7 +47,10 @@ namespace SWAD
 
         }
 
+        public void validate(Payment cardDetail)
+        {
 
+        }
         public override string ToString()
         {
             return $"name: {name}\nbalance: {balance}\ncvv: {cvv}\nexpiryDate Date: {expiryDate}";

@@ -11,13 +11,21 @@ internal class Program
     public static Renter renter { get; set; }
     public static CarOwner carOwner { get; set; }
     public static int vehicleid { get; set; }
-    public static int boookingId { get; set; }
+    public static int bookingId { get; set; }
     public static DateTime startdate { get; set; }
     public static DateTime enddate { get; set; }
     public static DateTime starttime { get; set; }
     public static DateTime endtime { get; set; }
     public static Booking BookingSlot { get; set; }
     public static int pickupOption { get; set; }
+    public static double fee { get; set; }
+    public static string name { get; set; }
+   public static Booking selectedBooking { get; set; }
+    public static string cvv { get; set; }
+    public static string cardNo { get; set; }
+    public static string expiryDate {  get; set; }
+    public static string location { get; set; }
+    public static List<IcarStation> stations { get; set; }
     private static void Main(string[] args)
     {
         void DisplayMenu()
@@ -32,7 +40,8 @@ internal class Program
         List<Booking> sList = new List<Booking>();
        List<Vehicle>listofvehicle = new List<Vehicle>();
         carOwner = startInterface();
-       // List<Vehicle> listOfAvailableVehicles = getAvailableVehicle();
+        //List<Vehicle> listOfAvailableVehicles = getAvailableVehicle();
+        stations = getAvailableIcarStation();
         renter = startbokingprocess();
         int data = 0;
         int option;
@@ -57,8 +66,8 @@ internal class Program
                 }*/
                 selectAvailableVehicle(out int vehicleid);
 
-                getAvailableDateTime(boookingId);
-                selectAvailableDateTime(boookingId);
+                getAvailableDateTime(bookingId);
+                selectAvailableDateTime(bookingId);
                 // selectPickUp()
 
 
@@ -90,7 +99,7 @@ internal class Program
                                 }*/
 
                                 // Find the selected booking
-                                Booking selectedBooking = carOwner.Bookinglist.Find(b => b.Id == boookingId);
+                                 selectedBooking = carOwner.Bookinglist.Find(b => b.Id == bookingId);
 
                                 if (selectedBooking != null)
                                 {
@@ -100,15 +109,16 @@ internal class Program
                                     vehicle.Booking = selectedBooking; // Assuming each vehicle has one booking
 
                                     // Handle pickup and return
-                                    selectPickUp(vehicle, out int pickupOption, out icar);
-                                    selectReturn(vehicle, pickupOption);
+                                    selectPickUpOption(vehicle, out int pickupOption);
+                                displayOptionforreturn();
+                                    selectReturnOption(vehicle, pickupOption);
 
                                     // Review booking details
                                     reviewBooking(vehicle, selectedBooking); // Ensure this method is defined
 
                                     // Display payment options
-                                    DisplayPaymentOptions(vehicle, selectedBooking); // Ensure this method is defined
-                                    createbooking(vehicle, selectedBooking, renter, icar);
+                                    selectPayment(vehicle, selectedBooking); // Ensure this method is defined
+                                    createbooking(vehicle, selectedBooking, renter);
                                 }
                                 else
                                 {
@@ -131,7 +141,7 @@ internal class Program
             else if (option == 2)
             {
                 //ManageBooking();
-
+                
                 startInterface();
                 getListOfVehicle();
                 promptVehicle();
@@ -141,6 +151,7 @@ internal class Program
                 promptDateTime();
                 //enterDateTime(startdate,starttime,enddate,endtime);
                 promptRentalfee();
+                enterRentalfee(fee);
                 
 
 
@@ -173,14 +184,11 @@ internal class Program
         }
 
 
-        static List<IcarStation> listOfIcarStation()
+        static List<IcarStation> getAvailableIcarStation()
         {
-            return new List<IcarStation>
-    {
-        new IcarStation { Id = 1, Location = "Clementi Branch" },
-        new IcarStation { Id = 2, Location = "Jurong Branch" },
-        new IcarStation { Id = 3, Location = "Tampines Branch" }
-    };
+            IcarStation icarStation = new IcarStation();
+           return icarStation.getAvailableIcarStation();
+    
         }
         static void displayListOfIcarStation(List<IcarStation> branches)
         {
@@ -257,17 +265,27 @@ internal class Program
             v =Convert.ToInt32(Console.ReadLine());
         }
 
-
-        //select delivery
-        static void selectPickUp(Vehicle selectedVehicle, out int pickupOption, out string icarStation)
+        static void displaypickUpOption()
         {
-            icarStation = string.Empty;
+            Console.WriteLine("Choose pickup or delivery option for pickup:");
+            Console.WriteLine("[1] Pickup");
+            Console.WriteLine("[2] Delivery");
+            Console.Write("Enter Your option: ");
+        }
+       static void selectPickUp()
+        {
+            Console.WriteLine("Pickup selected.");
+            displayListOfIcarStation(stations);
+            Console.Write("Choose a branch by ID: ");
+          
+        }
+        //select delivery
+        static void selectPickUpOption(Vehicle selectedVehicle, out int pickupOption)
+        {
+            //icarStation = string.Empty;
             while (true)
             {
-                Console.WriteLine("Choose pickup or delivery option for pickup:");
-                Console.WriteLine("[1] Pickup");
-                Console.WriteLine("[2] Delivery");
-                Console.Write("Enter Your option: ");
+                displaypickUpOption();
                 if (!int.TryParse(Console.ReadLine(), out pickupOption))
                 {
                     Console.WriteLine("Invalid input. Please enter a number.");
@@ -276,22 +294,22 @@ internal class Program
 
                 if (pickupOption == 1)
                 {
-                    Console.WriteLine("Pickup selected.");
-                    displayListOfIcarStation(listOfIcarStation());
-                    Console.Write("Choose a branch by ID: ");
+                    selectPickUp();
                     if (!int.TryParse(Console.ReadLine(), out int validIcarStationId))
                     {
                         Console.WriteLine("Invalid input. Please enter a number.");
                         continue;
                     }
 
-                    IcarStation validIcarStation = listOfIcarStation().Find(b => b.Id == validIcarStationId);
+                    IcarStation validIcarStation = selectIcarStation(stations, validIcarStationId);
 
                     if (validIcarStation != null)
                     {
-                        Console.WriteLine($"Pickup branch selected: {validIcarStation.Id}, Address: {validIcarStation.Location}");
-                        icarStation = validIcarStation.Location;
-                        
+                        // Here you can store or use the valid IcarStation
+                        // Example: icarStation = validIcarStation.Location;
+                        location=validIcarStation.Location;
+                        selectedBooking.selecticarstation();
+
                         break;
                     }
                     else
@@ -314,14 +332,50 @@ internal class Program
             }
         }
 
-        static void selectReturn(Vehicle selectedVehicle, int pickupOption)
+        static IcarStation selectIcarStation(List<IcarStation> stations, int validIcarStationId)
+        {
+            IcarStation validIcarStation = stations.Find(b => b.Id == validIcarStationId);
+
+            if (validIcarStation != null)
+            {
+                Console.WriteLine($"Pickup branch selected: {validIcarStation.Id}, Address: {validIcarStation.Location}");
+            }
+            else
+            {
+                Console.WriteLine("Invalid branch ID selected.");
+            }
+
+            return validIcarStation;
+        }
+        static void displayReturnOption()
+        {
+            Console.WriteLine("Choose return option:");
+            Console.WriteLine("[1] Return Pickup");
+            Console.WriteLine("[2] Return Delivery");
+            Console.Write("Enter Your option: ");
+        }
+       
+            static IcarStation selectReturnIcarStation(List<IcarStation> stations, int selectedBranchId)
+            {
+                IcarStation selectedBranch = stations.Find(b => b.Id == selectedBranchId);
+
+                if (selectedBranch != null)
+                {
+                    Console.WriteLine($"Return branch selected: {selectedBranch.Id}, Address: {selectedBranch.Location}");
+                }
+                else
+                {
+                    Console.WriteLine("Invalid branch ID selected.");
+                }
+
+                return selectedBranch;
+            }
+        
+        static void selectReturnOption(Vehicle selectedVehicle, int pickupOption)
         {
             while (true)
             {
-                Console.WriteLine("Choose return option:");
-                Console.WriteLine("[1] Return Pickup");
-                Console.WriteLine("[2] Return Delivery");
-                Console.Write("Enter Your option: ");
+                displayReturnOption();
                 if (!int.TryParse(Console.ReadLine(), out int returnOption))
                 {
                     Console.WriteLine("Invalid input. Please enter a number.");
@@ -331,7 +385,7 @@ internal class Program
                 if (returnOption == 1)
                 {
                     Console.WriteLine("Return Pickup selected.");
-                    displayListOfIcarStation(listOfIcarStation());
+                    displayListOfIcarStation(stations);
                     Console.Write("Choose a branch by ID: ");
                     if (!int.TryParse(Console.ReadLine(), out int selectedBranchId))
                     {
@@ -339,18 +393,17 @@ internal class Program
                         continue;
                     }
 
-                    IcarStation selectedBranch = listOfIcarStation().Find(b => b.Id == selectedBranchId);
+                    IcarStation selectedBranch = selectReturnIcarStation(stations, selectedBranchId);
 
                     if (selectedBranch != null)
                     {
-                        Console.WriteLine($"Return branch selected: {selectedBranch.Id}, Address: {selectedBranch.Location}");
+                        // Store or use the selectedBranch as needed
+                        location = selectedBranch.Location;
+                        selectedBooking.selecticarstation();
                         break;
                     }
-                    else
-                    {
-                        Console.WriteLine("Invalid branch ID selected.");
-                        continue;
-                    }
+                    
+                  
                 }
                 else if (returnOption == 2)
                 {
@@ -391,17 +444,18 @@ internal class Program
             {
                 Console.WriteLine("Please enter the delivery address details:");
 
-                string street = enterDeliveryForm("Street:");
-                string block = enterDeliveryForm("Block:");
-                string road = enterDeliveryForm("Road:");
-                string city = enterDeliveryForm("City:");
-                string postalCode = enterDeliveryForm("Postal Code:");
+                string street = printDeliveryForm("Street:");
+                string block = printDeliveryForm("Block:");
+                string road = printDeliveryForm("Road:");
+                string city = printDeliveryForm("City:");
+                string postalCode = printDeliveryForm("Postal Code:");
 
                 string fullAddress = $"Street: {street}, Block: {block}, Road: {road}, City: {city}, Postal Code: {postalCode}";
 
                 if (validate(street, block, road, city, postalCode))
                 {
                     Console.WriteLine($"Delivery address confirmed: {fullAddress}");
+                    addAddress(street, block, road, city, postalCode);
                     break;
                 }
                 else
@@ -410,8 +464,25 @@ internal class Program
                 }
             }
         }
+        static void enterDeliveryForm()
+        {
 
-        static string enterDeliveryForm(string prompt)
+        }
+        static void displayOptionforreturn()
+        {
+            Console.WriteLine("Choose pickup or delivery option for return:");
+            Console.WriteLine("[1] Pickup");
+            Console.WriteLine("[2] Delivery");
+            Console.Write("Enter Your option: ");
+            Console.ReadLine();
+
+        }
+        static void addAddress(string street, string block, string road, string city, string postalCode)
+        {
+
+            selectedBooking.addAddress(street,block,road,city,postalCode);
+        }
+        static string printDeliveryForm(string prompt)
         {
             Console.Write($"{prompt} ");
             return Console.ReadLine()?.Trim() ?? string.Empty;
@@ -428,7 +499,7 @@ internal class Program
         }
 
 
-        static void DisplayPaymentOptions(Vehicle selectedVehicle, Booking selectedBooking)
+        static void selectPayment(Vehicle selectedVehicle, Booking selectedBooking)
         {
             while (true)
             {
@@ -466,7 +537,23 @@ internal class Program
                 break;
             }
         }
-
+        static void enterCardDetail(string name ,string cardNo,string cvv,string expiryDate)
+        {
+            Console.WriteLine("Name:");
+            name=Console.ReadLine();
+            Console.WriteLine("Card Number (16 digits):");
+            cardNo=Console.ReadLine();
+            Console.WriteLine("CVV (3 digits):");
+            cvv= Console.ReadLine();
+            Console.WriteLine("Expiry Date (MM/YY):");
+            expiryDate= Console.ReadLine();
+            Payment payment=new Payment();
+            payment.validate(name, cardNo,cvv,expiryDate);
+            /*Program.name = name;
+            Program.cardNo = cardNo;
+            Program.cvv = cvv;
+            Program.expiryDate = expiryDate;*/
+        }
 
         static void selectCreditCard(Vehicle selectedVehicle, Booking selectedBooking)
         {
@@ -615,7 +702,7 @@ internal class Program
             Console.WriteLine();
         }
 
-        static void createbooking(Vehicle selectedVehicle, Booking selectedBooking, Renter r, string i)
+        static void createbooking(Vehicle selectedVehicle, Booking selectedBooking, Renter r)
         {
             
             // Assign pickup and return locations
@@ -623,14 +710,15 @@ internal class Program
             selectedBooking.IcarStationReturn = new IcarStation();
             selectedBooking.Deliverypickup = new Delivery();
             selectedBooking.DeliveryReturn = new Delivery();
-            selectedBooking.IcarStationPickup.Location = i;
-            selectedBooking.IcarStationReturn.Location = i;
+            //selectedBooking.IcarStationPickup.Location = i;
+            //selectedBooking.IcarStationReturn.Location = i;
 
             // Assign the selected vehicle to the booking
             selectedBooking.Vehicle = selectedVehicle;
 
             // Add the booking to the renter's upcoming rentals
             r.TrackUpComingRental.Add(selectedBooking);
+            r.BookingHistory.Add(selectedBooking);
         }
 
         static Renter startbokingprocess()
@@ -704,13 +792,16 @@ internal class Program
         static void promptRentalfee()
         {
             Console.Write("Enter the rental fee ($60-$106): ");
-            double fee = Convert.ToDouble(Console.ReadLine());
-            BookingSlot.setRentalfee(fee);
-            BookingSlot.addtoListOfBookingSlot(BookingSlot);
+            //double fee = Convert.ToDouble(Console.ReadLine());
+            //BookingSlot.setRentalfee(fee);
+           // BookingSlot.addtoListOfBookingSlot(BookingSlot);
         }
         static void enterRentalfee(double fee)
         {
-             fee = Convert.ToDouble(Console.ReadLine());
+           
+            fee = Convert.ToDouble(Console.ReadLine());
+            BookingSlot.setRentalfee(fee);
+            BookingSlot.addtoListOfBookingSlot(BookingSlot);
         }
         static void displaySuccessfulMeaasge()
         {
@@ -874,6 +965,51 @@ internal class Program
             bookingid=Convert.ToInt32(bookingid);
             renter.getlistofUpComingBooking(bookingid);
             
+        }
+
+        static void modifyUpcomingBooking()
+        {
+           
+            
+        }
+
+        static void selectModificationChoice(out string option)
+        {
+            Console.WriteLine("do you want to modify pickup/return location (yes/no)");
+             option = Console.ReadLine();
+            
+        }
+
+        static void noModification()
+        {
+            foreach(Booking booking in Program.renter.TrackUpComingRental)
+            {
+                foreach(Booking BookingHistory in Program.renter.BookingHistory)
+                {
+                    if (booking == BookingHistory)
+                    {
+                        Console.WriteLine("No Modification");
+                        break;
+                    }
+                }
+            }
+        }
+
+        static void selectPickupOrReturnLocation()
+        {
+            Console.WriteLine("");
+            string ans =Console.ReadLine();
+
+        }
+
+        static void modifyPickupLocation()
+        {
+
+        }
+
+        static void modifyReturnLocation()
+        {
+
         }
     }
 }

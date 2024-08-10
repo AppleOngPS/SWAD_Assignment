@@ -74,27 +74,34 @@ namespace SWAD
         public void addAddress(string street, string block, string road, string city, string postalCode)
         {
             string fullAddress = $"Street: {street}, Block: {block}, Road: {road}, City: {city}, Postal Code: {postalCode}";
-            int x= Program.renter.TrackUpComingRental.Count()-1;
-            Program.renter.TrackUpComingRental[x].Deliverypickup.location = fullAddress;
-            // Ensure that there are bookings in the list
-            if (x >= 0)
+            foreach(Booking booking in Program.renter.TrackUpComingRental)
             {
-                if (Program.pickupOption == 1)
+                if(booking.Id == Program.bookingId)
                 {
-                    // Update the address for the last booking's pickup delivery
-                    Program.renter.TrackUpComingRental[x].Deliverypickup.Location = fullAddress;
-                    Console.WriteLine("Address updated for the latest booking.");
-                }
-                else if (Program.pickupOption == 2)
-                {
-                    Program.renter.TrackUpComingRental[x].DeliveryReturn.Location = fullAddress;
-                    Console.WriteLine("Address updated for the latest booking.");
+                    int x = Program.renter.TrackUpComingRental.IndexOf(booking);
+                   
+                    // Ensure that there are bookings in the list
+                    if (x >= 0)
+                    {
+                        if (Program.pickupOption == 1)
+                        {
+                            // Update the address for the last booking's pickup delivery
+                            Program.renter.TrackUpComingRental[x].Deliverypickup.Location = fullAddress;
+                            Console.WriteLine("Address updated for the latest booking.");
+                        }
+                        else if (Program.pickupOption == 2)
+                        {
+                            Program.renter.TrackUpComingRental[x].DeliveryReturn.Location = fullAddress;
+                            Console.WriteLine("Address updated for the latest booking.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("No bookings available to update the address.");
+                    }
                 }
             }
-            else
-            {
-                Console.WriteLine("No bookings available to update the address.");
-            }
+            
         }
 
         public override string ToString()
