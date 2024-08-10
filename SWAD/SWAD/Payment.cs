@@ -34,11 +34,24 @@ namespace SWAD
                 get { return status; }
                 set { status = value; }
             }
-       
 
 
+        private Booking booking;
+        public Booking Booking
+        {
+            get { return booking; }
+            set
+            {
+                if (booking != value)
+                {
+                    booking = value;
+                    value.Payment = this;
+                }
+            }
 
-            public Payment(int i, double a, string t, string s)
+        }
+
+        public Payment(int i, double a, string t, string s)
             {
                 id = i;
                 amount = a;

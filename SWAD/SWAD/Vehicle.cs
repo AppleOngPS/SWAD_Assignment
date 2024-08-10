@@ -65,6 +65,21 @@ namespace SWAD
             get { return type; }
             set { type = value; }
         }
+        public Vehicle() { }
+
+        public Vehicle(int id, string make, string model, int mileage, string photo, double price, bool availability, string brand, string type)
+        {
+            this.id = id;
+            this.make = make;
+            this.model = model;
+            this.mileage = mileage;
+            this.photo = photo;
+            this.price = price;
+            this.availability = availability;
+            this.brand = brand;
+            this.type = type;
+        }
+
         private Booking booking;
         public Booking Booking
         {
@@ -83,6 +98,42 @@ namespace SWAD
         {
             get { return carOwner; }
             set { carOwner = value; }
+        }
+        public void getListOfVehicle()
+        {
+         
+                foreach (Vehicle vehicle in Program.carOwner.Vehiclelist)
+                {
+                    Console.WriteLine($"Id: {vehicle.Id} Brand:{vehicle.Brand} Make:{vehicle.Make} Model:{vehicle.Model} Type:{vehicle.Type} Mileage: {vehicle.Mileage}  Price: {vehicle.Price}");
+                }
+                
+        }
+        public void getVehicle(int vehicleid)
+        {
+            findVehicle(vehicleid);
+        }
+        public void findVehicle(int vehicleid)
+        {
+            Console.WriteLine(vehicleid);
+            // Search for the vehicle with the given ID
+            foreach (Vehicle vehicle in Program.carOwner.Vehiclelist)
+            {
+                if (vehicle.Id == vehicleid)
+                {
+                    Console.WriteLine("Vehicle Found:");
+                    Console.WriteLine($"Id: {vehicle.Id} | Brand: {vehicle.Brand} | Make: {vehicle.Make} | Model: {vehicle.Model} | Type: {vehicle.Type} | Mileage: {vehicle.Mileage} | Price: {vehicle.Price:C}");
+                    vehicle.Booking = new Booking();
+                    vehicle.Booking.createBookingSlot();
+                }
+
+            }
+
+
+        }
+        public void getAvailableDateTime(int boookingId)
+        {
+            
+           booking = Program.carOwner.Bookinglist[boookingId];
         }
         public override string ToString()
         {

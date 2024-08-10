@@ -43,8 +43,14 @@ namespace SWAD
                 }
             }
 
+        }
 
+        public IcarStation() { }
 
+        public IcarStation(int id,string l)
+        {
+            Id = id;
+            Location = l;
         }
 
     }

@@ -89,7 +89,48 @@ namespace SWAD
             }
         }
 
+        private Delivery deliverypickup;
+        public Delivery Deliverypickup
+        {
+            get { return deliverypickup; }
+            set
+            {
+                if (deliverypickup != value)
+                {
+                    deliverypickup = value;
+                    value.PickupBooking = this;
+                }
+            }
+        }
 
+        private Delivery deliveryReturn;
+        public Delivery DeliveryReturn
+        {
+            get { return deliveryReturn; }
+            set
+            {
+                if (deliveryReturn != value)
+                {
+                    deliveryReturn = value;
+                    value.ReturnBooking = this;
+                }
+            }
+        }
+
+
+        private Payment payment;
+        public Payment Payment
+        {
+            get { return payment; }
+            set 
+            {
+                if(payment != value)
+                {
+                    payment = value;
+                    value.Booking = this;
+                }
+            }
+        }
 
         public Booking() { }
         public Booking(int i , DateTime sd , DateTime st, DateTime ed, DateTime et)
@@ -101,28 +142,45 @@ namespace SWAD
             endTime = st;
         }
 
-        public void setDate(int id,int x,DateTime startdate, DateTime enddate)
+        public void setDateTime(DateTime startdate,DateTime starttime, DateTime enddate,DateTime endtime)
         {
-            if (id == carOwner.Id)
-            {
-                carOwner.Bookinglist[x].startDate = startdate;
-                carOwner.Bookinglist[x].endDate = enddate;
-            }
+            //int x=Program.carOwner.Bookinglist.Count()-1;
+            Program.BookingSlot.startDate = startdate;
+            Program.BookingSlot.endDate = enddate;
+            Program.BookingSlot.startTime = starttime;
+            Program.BookingSlot.endTime = endtime;
+            
         }
-        public void setTime(int id,int x,DateTime starttime, DateTime endtime)
+      
+        public void setRentalfee(double fee)
         {
-            if (id == carOwner.Id)
+            //int x = Program.carOwner.Bookinglist.Count() - 1;
+            foreach(Vehicle vehicle in Program.carOwner.Vehiclelist)
             {
-                carOwner.Bookinglist[x].startTime = starttime;
-                carOwner.Bookinglist[x].endTime = endtime;
+                Console.WriteLine(Program.vehicleid);
+                if(vehicle.Id ==Program.vehicleid)
+                {
+                    int x = Program.carOwner.Vehiclelist.IndexOf(vehicle);
+                   
+                    Program.BookingSlot.Vehicle = Program.carOwner.Vehiclelist[x];
+                    Program.BookingSlot.Vehicle.Price = fee;
+                    //Program.carOwner.Vehiclelist[x].Price = fee;
+                    break;
+
+                }
             }
+
+           
+            
         }
-        public void setRentalfee(int id,int x,double fee)
+
+        public void createBookingSlot()
         {
-            if (id == carOwner.Id)
-            {
-                carOwner.Vehiclelist[x].Price = fee;
-            }
+            Program.BookingSlot = new Booking();
+        }
+        public void addtoListOfBookingSlot(Booking bookingSlot)
+        {
+            Program.carOwner.Bookinglist.Add(bookingSlot);
         }
 
         public override string ToString()
