@@ -84,14 +84,14 @@ namespace SWAD
                     // Ensure that there are bookings in the list
                     if (x >= 0)
                     {
-                        if (Program.pickupOption == 1)
+                        if (Program.pickupOption == 2)
                         {
                             // Update the address for the last booking's pickup delivery
                             Program.renter.TrackUpComingRental[x].Deliverypickup.Location = fullAddress;
                             Console.WriteLine("Address updated for the latest booking.");
 
                         }
-                        else if (Program.pickupOption == 2)
+                        else if (Program.returnOption == 2)
                         {
                             Program.renter.TrackUpComingRental[x].DeliveryReturn.Location = fullAddress;
                             Console.WriteLine("Address updated for the latest booking.");

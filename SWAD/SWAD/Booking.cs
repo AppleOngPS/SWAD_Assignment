@@ -180,7 +180,7 @@ namespace SWAD
         }
         public void addtoListOfBookingSlot(Booking bookingSlot)
         {
-            Program.carOwner.Bookinglist.Add(bookingSlot);
+            Program.carOwner.BookingSlotList.Add(bookingSlot);
         }
         public void addAddress(string street, string block, string road, string city, string postalCode)
         {
@@ -199,7 +199,7 @@ namespace SWAD
         }
         public override string ToString()
         {
-            return $"Booking ID: {Id}\nStart Date: {StartDate}\nStart Time: {StartTime}\nEnd Date: {EndDate}\nEnd Time: {EndTime}";
+            return $"Booking ID: {Id}\nStart Date: {StartDate}\nStart Time: {StartTime.TimeOfDay}\nEnd Date: {EndDate}\nEnd Time: {EndTime.TimeOfDay}";
         }
 
     }

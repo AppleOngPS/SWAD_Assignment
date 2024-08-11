@@ -2,7 +2,9 @@
 using SWAD;
 using System.Diagnostics;
 using System.Globalization;
+using System.Numerics;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 
 internal class Program
@@ -26,7 +28,9 @@ internal class Program
     public static string cardNo { get; set; }
     public static string expiryDate {  get; set; }
     public static string location { get; set; }
+    public static string location2 { get; set; }
     public static string fulladdress { get; set; }  
+    public static int returnOption { get; set; }
     public static List<IcarStation> stations { get; set; }
     private static void Main(string[] args)
     {
@@ -35,7 +39,7 @@ internal class Program
             Console.WriteLine("Enter Your Option: ");
             Console.WriteLine("[1] Reserve Vehicle");
             Console.WriteLine("[2] Manage Booking");
-            Console.WriteLine("[3] option 3");
+            Console.WriteLine("[3] TrackUpComingBooking");
             Console.WriteLine("[0] Exit");
             Console.WriteLine("Enter Your option: ");
         }
@@ -101,7 +105,7 @@ internal class Program
                                 }*/
 
                                 // Find the selected booking
-                                 selectedBooking = carOwner.Bookinglist.Find(b => b.Id == bookingId);
+                                 selectedBooking = carOwner.BookingSlotList.Find(b => b.Id == bookingId);
 
                                 if (selectedBooking != null)
                                 {
@@ -113,9 +117,9 @@ internal class Program
                                     // Handle pickup and return
                                     selectPickUpOption(vehicle, out int pickupOption);
                                    Program.pickupOption = pickupOption;
-                                    displayOptionforreturn();
+                                   // displayOptionforreturn();
                                     selectReturnOption(vehicle, pickupOption);
-
+                                     
                                     // Review booking details
                                     reviewBooking(vehicle, selectedBooking); // Ensure this method is defined
 
@@ -157,8 +161,8 @@ internal class Program
                 selectVehicle(out int vehicleid);
                Program.vehicleid = vehicleid;
                 //findVehicle(vehicleid);
-                promptDateTime();
-                //enterDateTime(startdate,starttime,enddate,endtime);
+                //promptDateTime();
+                enterDateTime(startdate,starttime,enddate,endtime);
                 promptRentalfee();
                 enterRentalfee(fee);
                 
@@ -168,10 +172,26 @@ internal class Program
             }
             else if (option == 3)
             {
-                Console.WriteLine(Program.bookingId);
-                Console.WriteLine();
-                
                 selectTrackUpComingBooking();
+                getlistofUpComingBooking(bookingId);
+                modifyUpcomingBooking();
+                selectModificationChoice(out string yesorNo);
+                if (yesorNo == "no")
+                {
+                    noModification();
+                }
+                if (yesorNo == "yes") 
+                {
+                    selectPickupOrReturnLocation();
+                    //modifyPickupLocation();
+                    //modifyReturnLocation();
+                    getModificationCost();
+                    displayModifyCost();
+                    confirmModifyCost();
+                    //modificationUpdatedAlert();
+                    
+                }
+               
             }
             else if (option == 0)
             {
@@ -247,15 +267,16 @@ internal class Program
 
         static void displayAvailableDateTime(Booking booking)
         {
+            
+                Console.WriteLine($"Booking ID: {booking.Id}");
 
-            Console.WriteLine($"Booking ID: {booking.Id}");
-
-            Console.WriteLine($"Start Date: {booking.StartDate:dd/MM/yyyy}");
-            Console.WriteLine($"Start Time: {booking.StartTime:HH:mm}");
-            Console.WriteLine($"End Date: {booking.EndDate:dd/MM/yyyy}");
-            Console.WriteLine($"End Time: {booking.EndTime:HH:mm}");
-            Console.WriteLine();
-
+                Console.WriteLine($"Start Date: {booking.StartDate:dd/MM/yyyy}");
+                Console.WriteLine($"Start Time: {booking.StartTime:HH:mm}");
+                Console.WriteLine($"End Date: {booking.EndDate:dd/MM/yyyy}");
+                Console.WriteLine($"End Time: {booking.EndTime:HH:mm}");
+                Console.WriteLine();
+            
+            
 
 
 
@@ -394,7 +415,7 @@ internal class Program
                     Console.WriteLine("Invalid input. Please enter a number.");
                     continue;
                 }
-                Program.pickupOption=returnOption;
+                Program.returnOption=returnOption;
                 if (returnOption == 1)
                 {
                     Console.WriteLine("Return Pickup selected.");
@@ -411,7 +432,7 @@ internal class Program
                     if (selectedBranch != null)
                     {
                         // Store or use the selectedBranch as needed
-                        location = selectedBranch.Location;
+                        location2 = selectedBranch.Location;
                         selectedBooking.selecticarstation();
                         break;
                     }
@@ -578,9 +599,12 @@ internal class Program
             cardNo = Console.ReadLine();
             cvv = Console.ReadLine();
             expiryDate = Console.ReadLine();
-            Console.WriteLine(name);
+            Program.name = name;
+            Program.cardNo = cardNo;
+            Program.cvv = cvv;
+            Program.expiryDate = expiryDate;
             Payment payment = new Payment();
-            payment.validate(name, cardNo, cvv, expiryDate);
+            //payment.validate(name, cardNo, cvv, expiryDate);
         }
      
 
@@ -729,7 +753,7 @@ internal class Program
         {
             Console.WriteLine("Booking and Payment Confirmation:");
             Console.WriteLine($"Vehicle: {selectedVehicle.Make} {selectedVehicle.Model}");
-            Console.WriteLine($"Booking ID: {selectedBooking.Id}, Start Date: {selectedBooking.StartDate}, Start Time: {selectedBooking.StartTime}, End Date: {selectedBooking.EndDate}, End Time: {selectedBooking.EndTime}");
+            Console.WriteLine($"Booking ID: {selectedBooking.Id}, Start Date: {selectedBooking.StartDate:dd/MM/yyyy}, Start Time: {selectedBooking.StartTime:HH:mm}, End Date: {selectedBooking.EndDate:dd/MM/yyyy}, End Time: {selectedBooking.EndTime:HH:mm}");
             Console.WriteLine("Thank you for your reservation!");
         }
 
@@ -738,7 +762,7 @@ internal class Program
             Console.WriteLine();
             Console.WriteLine("Booking details:");
             Console.WriteLine($"Vehicle: {selectedVehicle.Make}, {selectedVehicle.Model} ({selectedVehicle.Type}), Mileage:{selectedVehicle.Mileage}, Price:${selectedVehicle.Price}");
-            Console.WriteLine($"Booking ID: {selectedBooking.Id}, Start Date: {selectedBooking.StartDate}, Start Time: {selectedBooking.StartTime}, End Date: {selectedBooking.EndDate}, End Time: {selectedBooking.EndTime}");
+            Console.WriteLine($"Booking ID: {selectedBooking.Id}, Start Date: {selectedBooking.StartDate:dd/MM/yyyy}, Start Time: {selectedBooking.StartTime:HH:mm}, End Date: {selectedBooking.EndDate:dd/MM/yyyy}, End Time: {selectedBooking.EndTime:HH:mm}");
             Console.WriteLine("-----------------Proceed to payment-----------------");
             Console.WriteLine();
         }
@@ -752,7 +776,7 @@ internal class Program
             selectedBooking.Deliverypickup = new Delivery();
             selectedBooking.DeliveryReturn = new Delivery();
             selectedBooking.IcarStationPickup.Location = Program.location;
-            selectedBooking.IcarStationReturn.Location = Program.location;
+            selectedBooking.IcarStationReturn.Location = Program.location2;
             selectedBooking.Deliverypickup.Location = Program.fulladdress;
             selectedBooking.DeliveryReturn.Location = Program.fulladdress;
 
@@ -810,27 +834,81 @@ internal class Program
        static void promptDateTime()
         {
             Console.Write("Enter the schedule start date (dd/MM/YYYY): ");
-          DateTime startDate = Convert.ToDateTime(Console.ReadLine());
+         // DateTime startDate = Convert.ToDateTime(Console.ReadLine());
 
             Console.Write("Enter the schedule end date (dd/MM/YYYY): ");
-           DateTime endDate = Convert.ToDateTime(Console.ReadLine());
+          // DateTime endDate = Convert.ToDateTime(Console.ReadLine());
 
             Console.Write("Enter the schedule start time (HH:mm): ");
-            DateTime startTime = Convert.ToDateTime(Console.ReadLine());
+           // DateTime startTime = Convert.ToDateTime(Console.ReadLine());
 
             Console.Write("Enter the schedule end time (HH:mm): ");
-           DateTime endTime = Convert.ToDateTime(Console.ReadLine());
-           // BookingSlot = new Booking();
-            BookingSlot.createBookingSlot();
-            BookingSlot.setDateTime(startDate, endDate, startTime, endTime);
+           //DateTime endTime = Convert.ToDateTime(Console.ReadLine());
+           
             
         }
        static void enterDateTime(DateTime startDate,DateTime startTime,DateTime endDate,DateTime endTime)
         {
-            startDate=Convert.ToDateTime(Console.ReadLine());
-            startTime=Convert.ToDateTime(Console.ReadLine());
-            endDate=Convert.ToDateTime(Console.ReadLine());
-            endTime=Convert.ToDateTime(Console.ReadLine());
+            bool conflictFound;
+
+            do
+            {
+                conflictFound = false;
+
+                Console.Write("Enter the start date (dd/MM/YYYY): ");
+                while (!DateTime.TryParse(Console.ReadLine(), out startDate) || startDate < DateTime.Today)
+                {
+                    Console.WriteLine("Invalid start date. Please enter a valid date.");
+                }
+
+                Console.Write("Enter the start time (HH:mm): ");
+                while (!DateTime.TryParse(Console.ReadLine(), out startTime))
+                {
+                    Console.WriteLine("Invalid start time. Please enter a valid time.");
+                }
+
+                Console.Write("Enter the end date (dd/MM/YYYY): ");
+                while (!DateTime.TryParse(Console.ReadLine(), out endDate) || endDate < startDate)
+                {
+                    Console.WriteLine("Invalid end date. Please enter a valid date after the start date.");
+                }
+
+                Console.Write("Enter the end time (HH:mm): ");
+                while (!DateTime.TryParse(Console.ReadLine(), out endTime) || endTime <= startTime)
+                {
+                    Console.WriteLine("Invalid end time. Please enter a valid time after the start time.");
+                }
+
+                foreach (Vehicle vehicle in carOwner.Vehiclelist)
+                {
+                    if (vehicle.Id == vehicleid)
+                    {
+                        DateTime bookedStart = vehicle.Booking.StartDate.Add(vehicle.Booking.StartTime.TimeOfDay);
+                        DateTime bookedEnd = vehicle.Booking.EndDate.Add(vehicle.Booking.EndTime.TimeOfDay);
+
+                        DateTime newStart = startDate.Add(startTime.TimeOfDay);
+                        DateTime newEnd = endDate.Add(endTime.TimeOfDay);
+
+                        // Check for overlap
+                        if ((newStart < bookedEnd && newEnd > bookedStart) || (newStart >= bookedStart && newStart < bookedEnd))
+                        {
+                            Console.WriteLine("The selected date and time overlap with an existing booking. Please enter a different time slot.");
+                            conflictFound = true;
+                            break;
+                        }
+
+
+
+                        if (conflictFound)
+                            break;
+                    }
+                }
+
+            } while (conflictFound);
+
+            BookingSlot.createBookingSlot();
+            BookingSlot.setDateTime(startDate, startTime, endDate, endTime);
+            
         }
         static void promptRentalfee()
         {
@@ -842,9 +920,14 @@ internal class Program
         static void enterRentalfee(double fee)
         {
            
-            fee = Convert.ToDouble(Console.ReadLine());
+            //fee = Convert.ToDouble(Console.ReadLine());
+            while (!double.TryParse(Console.ReadLine(), out fee) || fee < 60 || fee > 106)
+            {
+                Console.WriteLine("Invalid fee. Please enter a value between $60 and $106.");
+            }
             BookingSlot.setRentalfee(fee);
             BookingSlot.addtoListOfBookingSlot(BookingSlot);
+            displaySuccessfulMeaasge();
         }
         static void displaySuccessfulMeaasge()
         {
@@ -994,11 +1077,40 @@ internal class Program
         {
             foreach (Booking selectedBooking in renter.TrackUpComingRental)
             {
-                Console.WriteLine($"Booking ID: {selectedBooking.Id}, Start Date: {selectedBooking.StartDate}, Start Time: {selectedBooking.StartTime}, End Date: {selectedBooking.EndDate}, End Time: {selectedBooking.EndTime}");
-                Console.WriteLine($"pickup:{selectedBooking.IcarStationPickup.Location}");
-                Console.WriteLine($"pickup:{selectedBooking.IcarStationReturn.Location}");
-                Console.WriteLine($"pickup:{selectedBooking.Deliverypickup.Location}");
-                Console.WriteLine($"pickup:{selectedBooking.DeliveryReturn.Location}");
+                Console.WriteLine($"Booking ID: {selectedBooking.Id}, Start Date: {selectedBooking.StartDate:dd/MM/yyyy}, Start Time: {selectedBooking.StartTime.TimeOfDay}, End Date: {selectedBooking.EndDate:dd/MM/yyyy}, End Time: {selectedBooking.EndTime.TimeOfDay}");
+                if (string.IsNullOrEmpty(selectedBooking.IcarStationPickup.Location))
+                {
+
+                }
+                else
+                {
+                    Console.WriteLine($"IcarStationPickup:{selectedBooking.IcarStationPickup.Location}");
+                }
+                if (string.IsNullOrEmpty(selectedBooking.IcarStationReturn.Location))
+                {
+
+                }
+                else
+                {
+                    Console.WriteLine($"IcarStationReturn:{selectedBooking.IcarStationReturn.Location}");
+                }
+                if (string.IsNullOrEmpty(selectedBooking.Deliverypickup.Location))
+                {
+
+                }
+                else
+                {
+                    Console.WriteLine($"Deliverypickup:{selectedBooking.Deliverypickup.Location}");
+                }
+                if (string.IsNullOrEmpty(selectedBooking.DeliveryReturn.Location))
+                {
+
+                }
+                else
+                {
+                    Console.WriteLine($"DeliveryReturn:{selectedBooking.DeliveryReturn.Location}");
+                }
+               
 
             }
         }
@@ -1006,7 +1118,8 @@ internal class Program
         static void getlistofUpComingBooking(int bookingid)
         {
             Console.WriteLine("select Booking Id:");
-            bookingid=Convert.ToInt32(bookingid);
+            bookingid=Convert.ToInt32(Console.ReadLine());
+            
             renter.getlistofUpComingBooking(bookingid);
             
         }
@@ -1039,6 +1152,7 @@ internal class Program
             }
         }
 
+        
         static void selectPickupOrReturnLocation()
         {
             Console.WriteLine("Select a Location: ");
@@ -1050,95 +1164,117 @@ internal class Program
 
             if (input == "1")
             {
-                //modifyPickupLocation();
+                modifyPickupLocation();
             }
-
-            if (input == "2")
+            else if (input == "2")
             {
-               // modifyReturnLocation();
+                modifyReturnLocation();
             }
             else
             {
                 Console.WriteLine("Invalid option. Please select 1 or 2.");
             }
         }
-        /*
+
+
         static void modifyPickupLocation()
         {
-            // Display current location from upcoming booking
-            Console.WriteLine($"Current Pickup Location: {pickupLocation}");
-            // modify iCar station to delivery
-            Console.WriteLine("Would you like to change the pickup location to a delivery option? (Yes/No)");
-            // call getModificationLocation method
-            string changeLocation = Console.ReadLine().ToLower();
+            // Display current pickup location from the selected booking
+            Console.WriteLine($"Current Pickup Location: {Program.renter.TrackUpComingRental[Program.bookingId].Deliverypickup.Location}");
 
-            if (changeLocation == "Yes")
+            // Ask if the user wants to modify the pickup location to a delivery option
+            Console.WriteLine("Would you like to change the pickup location to a delivery option? (Yes/No)");
+            string changeLocation = Console.ReadLine();
+
+            if (changeLocation.ToLower() == "yes")
             {
-                Console.Write("Enter new Pickup Location: ");
-                pickupLocation = Console.ReadLine();
-                Console.WriteLine($"Pickup Location Updated: {pickuplocation)");
+                Console.Write("Enter the new Pickup Location: ");
+                string newPickupLocation = Console.ReadLine();
+
+                // Update the pickup location
+                Program.renter.TrackUpComingRental[Program.bookingId].Deliverypickup.Location = newPickupLocation;
+                Program.renter.TrackUpComingRental[Program.bookingId].IcarStationPickup.Location = "";
+                Console.WriteLine($"Pickup Location Updated: {newPickupLocation}");
             }
             else
             {
                 Console.WriteLine("Pickup Location remains the same.");
             }
 
-            getModificationCost();
+           /* getModificationCost();
             displayModifyCost();
-            confirmModifyCost();
+            confirmModifyCost();*/
         }
+
+
 
         static void modifyReturnLocation()
         {
-            // Display current location from upcoming booking
-            Console.WriteLine($"Current Return Location: {returnLocation}");
-            // modify iCar station to delivery
-            Console.WriteLine("Would you like to change the return location to a delivery option? (Yes/No)");
-            // call getModificationLocation method
-            string changeLocation = Console.ReadLine().ToLower();
+            // Display current return location from the selected booking
+            Console.WriteLine($"Current Return Location: {Program.renter.TrackUpComingRental[Program.bookingId].DeliveryReturn.Location}");
 
-            if (changeLocation == "Yes")
+            // Ask if the user wants to modify the return location to a delivery option
+            Console.WriteLine("Would you like to change the return location to a delivery option? (Yes/No)");
+            string changeLocation = Console.ReadLine();
+
+            if (changeLocation.ToLower() == "yes")
             {
-                Console.Write("Enter new Return Location: ");
-                returnLocation = Console.ReadLine();
-                Console.WriteLine($"Pickup Location Updated: {returnlocation)");
+                Console.Write("Enter the new Return Location: ");
+                string newReturnLocation = Console.ReadLine();
+
+                // Update the return location
+                Program.renter.TrackUpComingRental[Program.bookingId].DeliveryReturn.Location = newReturnLocation;
+                Program.renter.TrackUpComingRental[Program.bookingId].IcarStationReturn.Location = "";
+                Console.WriteLine($"Return Location Updated: {newReturnLocation}");
             }
             else
             {
-                Console.WriteLine("Pickup Location remains the same.");
+                Console.WriteLine("Return Location remains the same.");
             }
 
-            getModificationCost();
+          /*  getModificationCost();
             displayModifyCost();
-            confirmModifyCost();
+            confirmModifyCost();*/
         }
 
-        static void getModificationCost()
+
+
+        static double getModificationCost()
         {
             // set cost to 50 dollars
             double modificationCost = 50.0;
+            return modificationCost;
         }
 
         static void displayModifyCost()
         {
-            Console.WriteLine($"Modification Cost: {getModificationCost}");  // display value of getModificationCost
+            Console.WriteLine($"Modification Cost: {getModificationCost()}");  // display value of getModificationCost
         }
 
         static void confirmModifyCost()
         {
             // a confirmation button and link to payment method
-            Console.WriteLine("Do you want to confirm the modification? (Yes/No");
+            Console.WriteLine("Do you want to confirm the modification? (Yes/No)");
             string confirm = Console.ReadLine().ToLower();
 
-            if (confirm == "Yes")
+            if (confirm == "yes")
             {
                 Console.WriteLine("Modification confirmed. Proceeding to payment.");
-                // call payment methods
+                // Now you can use selectVehicle and selectedBooking to call the payment methods
+                selectPayment(vehicle,selectedBooking);
+                modificationUpdatedAlert();
             }
             else
             {
                 Console.WriteLine("Modification cancelled.");
             }
-        }*/
+        }
+
+      
+        static void modificationUpdatedAlert()
+        {
+            // Print a message to confirm that the modification has been successfully updated
+            Console.WriteLine("Modification has been updated successfully. Thank you for your patience.");
+        }
     }
 }

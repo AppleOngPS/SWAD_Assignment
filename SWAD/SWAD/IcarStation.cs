@@ -78,7 +78,7 @@ namespace SWAD
                             Program.renter.TrackUpComingRental[x].IcarStationPickup.Location = Program.location;
                             Console.WriteLine("Address updated for the latest booking.");
                         }
-                        else if (Program.pickupOption == 2)
+                        else if (Program.returnOption == 1)
                         {
                             Program.renter.TrackUpComingRental[x].IcarStationReturn.Location = Program.location;
                             Console.WriteLine("Address updated for the latest booking.");

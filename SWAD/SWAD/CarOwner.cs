@@ -17,7 +17,7 @@ namespace SWAD
         }
 
         public List<Vehicle> Vehiclelist { get; set; } = new List<Vehicle>();
-        public List<Booking> Bookinglist { get; set; }= new List<Booking>();
+        public List<Booking> BookingSlotList { get; set; }= new List<Booking>();
         public CarOwner() { }
         public CarOwner(int id, string n, int c, DateTime dob,double e=0):base(id,n,c,dob)
         {

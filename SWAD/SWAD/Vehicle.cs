@@ -132,8 +132,15 @@ namespace SWAD
         }
         public void getAvailableDateTime(int bookingId)
         {
-            
-           booking = Program.carOwner.Bookinglist[bookingId];
+            try
+            {
+                booking = Program.carOwner.BookingSlotList[bookingId];
+                if (booking == null)
+                {
+                    Console.WriteLine("No booking slot found.");
+                }
+            }
+            catch (Exception e) { Console.WriteLine("No booking slot found."); }
         }
         public List< Vehicle> getetAvailableVehicle()
         {
@@ -142,7 +149,7 @@ namespace SWAD
         }
         public void bookingConfirmationAlert()
         {
-            Console.WriteLine("Booking confirmed!");
+            Console.WriteLine("Vehicle Booking confirmed!");
         }
         public override string ToString()
         {
