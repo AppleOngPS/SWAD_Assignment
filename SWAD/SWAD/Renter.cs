@@ -19,7 +19,7 @@ namespace SWAD
         private double monthlyrentalminimum;
         public double MonthlyRentalMinimum {  get { return monthlyrentalminimum; } set { monthlyrentalminimum = value;} }
        
-        public List<Booking> TrackUpComingRental { get; set; } = new List<Booking>();
+        public List<Booking> TrackUpComingBooking { get; set; } = new List<Booking>();
         public List<Booking> BookingHistory { get;set; } = new List<Booking>();
 
         public Renter() { }
@@ -36,11 +36,11 @@ namespace SWAD
 
         public void getlistofUpComingBooking(int bookingid)
         {
-            foreach (Booking booking in Program.renter.TrackUpComingRental)
+            foreach (Booking booking in Program.renter.TrackUpComingBooking)
             {
                 if (booking.Id == bookingid)
                 {
-                    int x = Program.renter.TrackUpComingRental.IndexOf(booking);
+                    int x = Program.renter.TrackUpComingBooking.IndexOf(booking);
                   //return Program.renter.TrackUpComingRental[x];
                 }
             }

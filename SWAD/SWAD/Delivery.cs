@@ -74,11 +74,11 @@ namespace SWAD
         public void addAddress(string street, string block, string road, string city, string postalCode)
         {
             string fullAddress = $"Street: {street}, Block: {block}, Road: {road}, City: {city}, Postal Code: {postalCode}";
-            foreach(Booking booking in Program.renter.TrackUpComingRental)
+            foreach(Booking booking in Program.renter.TrackUpComingBooking)
             {
                 if(booking.Id == Program.bookingId)
                 {
-                    int x = Program.renter.TrackUpComingRental.IndexOf(booking);
+                    int x = Program.renter.TrackUpComingBooking.IndexOf(booking);
                     Console.WriteLine($"dknlsdvljsdbvd{Program.pickupOption}");
                    
                     // Ensure that there are bookings in the list
@@ -87,13 +87,13 @@ namespace SWAD
                         if (Program.pickupOption == 2)
                         {
                             // Update the address for the last booking's pickup delivery
-                            Program.renter.TrackUpComingRental[x].Deliverypickup.Location = fullAddress;
+                            Program.renter.TrackUpComingBooking[x].Deliverypickup.Location = fullAddress;
                             Console.WriteLine("Address updated for the latest booking.");
 
                         }
                         else if (Program.returnOption == 2)
                         {
-                            Program.renter.TrackUpComingRental[x].DeliveryReturn.Location = fullAddress;
+                            Program.renter.TrackUpComingBooking[x].DeliveryReturn.Location = fullAddress;
                             Console.WriteLine("Address updated for the latest booking.");
                         }
                     }

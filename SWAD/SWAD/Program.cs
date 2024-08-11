@@ -784,7 +784,7 @@ internal class Program
             selectedBooking.Vehicle = selectedVehicle;
 
             // Add the booking to the renter's upcoming rentals
-            r.TrackUpComingRental.Add(selectedBooking);
+            r.TrackUpComingBooking.Add(selectedBooking);
             r.BookingHistory.Add(selectedBooking);
         }
 
@@ -924,6 +924,7 @@ internal class Program
             while (!double.TryParse(Console.ReadLine(), out fee) || fee < 60 || fee > 106)
             {
                 Console.WriteLine("Invalid fee. Please enter a value between $60 and $106.");
+                displayError();
             }
             BookingSlot.setRentalfee(fee);
             BookingSlot.addtoListOfBookingSlot(BookingSlot);
@@ -936,7 +937,7 @@ internal class Program
         }
         static void displayError()
         {
-
+            Console.WriteLine("");
         }
         /*
         static void ManageBooking(List<CarOwner> vlist)
@@ -1075,7 +1076,7 @@ internal class Program
 
         static void selectTrackUpComingBooking()
         {
-            foreach (Booking selectedBooking in renter.TrackUpComingRental)
+            foreach (Booking selectedBooking in renter.TrackUpComingBooking)
             {
                 Console.WriteLine($"Booking ID: {selectedBooking.Id}, Start Date: {selectedBooking.StartDate:dd/MM/yyyy}, Start Time: {selectedBooking.StartTime.TimeOfDay}, End Date: {selectedBooking.EndDate:dd/MM/yyyy}, End Time: {selectedBooking.EndTime.TimeOfDay}");
                 if (string.IsNullOrEmpty(selectedBooking.IcarStationPickup.Location))
@@ -1139,7 +1140,7 @@ internal class Program
 
         static void noModification()
         {
-            foreach(Booking booking in Program.renter.TrackUpComingRental)
+            foreach(Booking booking in Program.renter.TrackUpComingBooking)
             {
                 foreach(Booking BookingHistory in Program.renter.BookingHistory)
                 {
@@ -1180,7 +1181,7 @@ internal class Program
         static void modifyPickupLocation()
         {
             // Display current pickup location from the selected booking
-            Console.WriteLine($"Current Pickup Location: {Program.renter.TrackUpComingRental[Program.bookingId].Deliverypickup.Location}");
+            Console.WriteLine($"Current Pickup Location: {Program.renter.TrackUpComingBooking[Program.bookingId].Deliverypickup.Location}");
 
             // Ask if the user wants to modify the pickup location to a delivery option
             Console.WriteLine("Would you like to change the pickup location to a delivery option? (Yes/No)");
@@ -1192,8 +1193,8 @@ internal class Program
                 string newPickupLocation = Console.ReadLine();
 
                 // Update the pickup location
-                Program.renter.TrackUpComingRental[Program.bookingId].Deliverypickup.Location = newPickupLocation;
-                Program.renter.TrackUpComingRental[Program.bookingId].IcarStationPickup.Location = "";
+                Program.renter.TrackUpComingBooking[Program.bookingId].Deliverypickup.Location = newPickupLocation;
+                Program.renter.TrackUpComingBooking[Program.bookingId].IcarStationPickup.Location = "";
                 Console.WriteLine($"Pickup Location Updated: {newPickupLocation}");
             }
             else
@@ -1211,7 +1212,7 @@ internal class Program
         static void modifyReturnLocation()
         {
             // Display current return location from the selected booking
-            Console.WriteLine($"Current Return Location: {Program.renter.TrackUpComingRental[Program.bookingId].DeliveryReturn.Location}");
+            Console.WriteLine($"Current Return Location: {Program.renter.TrackUpComingBooking[Program.bookingId].DeliveryReturn.Location}");
 
             // Ask if the user wants to modify the return location to a delivery option
             Console.WriteLine("Would you like to change the return location to a delivery option? (Yes/No)");
@@ -1223,8 +1224,8 @@ internal class Program
                 string newReturnLocation = Console.ReadLine();
 
                 // Update the return location
-                Program.renter.TrackUpComingRental[Program.bookingId].DeliveryReturn.Location = newReturnLocation;
-                Program.renter.TrackUpComingRental[Program.bookingId].IcarStationReturn.Location = "";
+                Program.renter.TrackUpComingBooking[Program.bookingId].DeliveryReturn.Location = newReturnLocation;
+                Program.renter.TrackUpComingBooking[Program.bookingId].IcarStationReturn.Location = "";
                 Console.WriteLine($"Return Location Updated: {newReturnLocation}");
             }
             else
