@@ -924,7 +924,7 @@ internal class Program
             while (!double.TryParse(Console.ReadLine(), out fee) || fee < 60 || fee > 106)
             {
                 Console.WriteLine("Invalid fee. Please enter a value between $60 and $106.");
-                displayError();
+                displayErrorMessage();
             }
             BookingSlot.setRentalfee(fee);
             BookingSlot.addtoListOfBookingSlot(BookingSlot);
@@ -935,9 +935,9 @@ internal class Program
             Console.WriteLine("Booking scheduled successfully.");
             Console.WriteLine("A confirmation email will be sent to you shortly.");
         }
-        static void displayError()
+        static void displayErrorMessage()
         {
-            Console.WriteLine("");
+            Console.WriteLine("Please try again");
         }
         /*
         static void ManageBooking(List<CarOwner> vlist)
